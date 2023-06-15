@@ -1,4 +1,3 @@
-from unittest import IsolatedAsyncioTestCase as AsyncioTest
 import os
 
 async def start_all_tests():

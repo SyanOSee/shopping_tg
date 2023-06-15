@@ -1,8 +1,11 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from utils.constants import ButtonNames
 
-example_keyboard = ReplyKeyboardMarkup()
-example_buttons = [
-    KeyboardButton("Button name")
+menu_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+menu_buttons = [
+    KeyboardButton(ButtonNames.ABOUT),
+    KeyboardButton(ButtonNames.FAQ),
+    KeyboardButton(ButtonNames.BASKET),
+    KeyboardButton(ButtonNames.CHOOSE_PRODUCT),
 ]
-
-example_keyboard.add(*example_buttons)
+menu_keyboard.add(*menu_buttons)

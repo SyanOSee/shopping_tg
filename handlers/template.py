@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
-from init_loader import dp, logger, anti_spam
+from init_loader import dp, db, logger, anti_spam
 from states.example_state import ExampleStates
 
 @dp.message_handler(commands=["command"])

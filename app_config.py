@@ -4,6 +4,7 @@ import os
 
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 # Telegram Bot Token
@@ -20,6 +21,9 @@ DATABASE_PATH = os.getenv("DATABASE_PATH")
 
 # Log file path
 LOGGING_PATH = os.getenv("LOGGING_PATH")
+
+# Flask secret key
+FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
 
 # Webhook [Optional]
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
