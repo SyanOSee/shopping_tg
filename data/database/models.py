@@ -2,6 +2,7 @@ from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.mutable import MutableDict, MutableList
 
+from datetime import datetime
 
 class Models:
     base = declarative_base()
@@ -10,16 +11,16 @@ class Models:
         __tablename__ = 'users'
         id = Column(Integer, primary_key=True, autoincrement=True)
         user_id = Column(Integer)
-        basket = Column(MutableDict.as_mutable(JSON), default={})
+        cart = Column(MutableDict.as_mutable(JSON), default={})
         order_ids = Column(MutableList.as_mutable(PickleType), default=[])
 
-        def __init__(self, user_id, basket=None, order_ids=None):
-            if basket is None:
-                basket = {}
+        def __init__(self, user_id: int, cart=None, order_ids=None):
+            if cart is None:
+                cart = {}
             if order_ids is None:
                 order_ids = []
             self.user_id = user_id
-            self.basket = basket
+            self.cart = cart
             self.order_ids = order_ids
 
         __table_args__ = (
@@ -38,7 +39,11 @@ class Models:
         amount = Column(Integer)
         discount = Column(Integer, default=0)
 
-        def __init__(self, product_id, category, name, description, image_url, cost, amount, discount=0):
+        def __init__(self,
+                     product_id: int, category: str, name: str,
+                     description: str, image_url: str, cost: float,
+                     amount: int, discount=0
+                     ):
             self.product_id = product_id
             self.category = category
             self.name = name
@@ -58,12 +63,12 @@ class Models:
     class Order(base):
         __tablename__ = 'orders'
         id = Column(Integer, primary_key=True, autoincrement=True)
-        order_id = Column(Integer)
+        order_id = Column(String)
         products_info = Column(MutableDict.as_mutable(JSON), default={})
         address = Column(String)
         trade_time = Column(DateTime)
 
-        def __init__(self, order_id, products_info, address, trade_time):
+        def __init__(self, order_id: str, products_info: dict, address: str, trade_time: datetime):
             self.order_id = order_id
             self.products_info = products_info
             self.address = address

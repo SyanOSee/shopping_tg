@@ -2,6 +2,7 @@ from unittest import IsolatedAsyncioTestCase as AsyncioTest
 from init_loader import db
 from data.database.models import Models
 
+
 class test_database(AsyncioTest):
     async def test_insert_user_if_not_exist(self):
         user = Models.User(13831)
@@ -23,7 +24,7 @@ class test_database(AsyncioTest):
         updated_user = Models.User(139184, {'1': 1, '2': 2}, [1, 2, 3, 4, 5])
         await db.update_user(updated_user)
         retrieved_user = await db.get_user_by_id(updated_user.user_id)
-        self.assertTrue(retrieved_user.basket == updated_user.basket)
+        self.assertTrue(retrieved_user.cart == updated_user.cart)
         self.assertTrue(retrieved_user.order_ids == updated_user.order_ids)
         await db.delete_user(user)
 
@@ -46,6 +47,25 @@ class test_database(AsyncioTest):
         none = await db.get_product_by_id(-1919191919)
         self.assertTrue(retrieved_product is not None and none is None)
         await db.delete_product(product)
+
+    async def test_get_products_by_category(self):
+        category = 'category'
+        product = Models.Product(845, category, 'js', 'super cool js', 'C://js.png', 1, 32)
+        await db.insert_product_if_not_exist(product)
+        products = await db.get_products_by_category(category)
+        self.assertTrue(products[0] is not None)
+        self.assertTrue(await db.get_products_by_category('test') is None)
+        await db.delete_product(product)
+
+    async def get_categories(self):
+        categories = ['category', 'category1']
+        product = Models.Product(845, categories[0], 'js', 'super cool js', 'C://js.png', 1, 32)
+        product1 = Models.Product(845, categories[1], 'js', 'super cool js', 'C://js.png', 1, 32)
+        await db.insert_product_if_not_exist(product)
+        self.assertTrue(await db.get_categories() == categories)
+        await db.delete_product(product)
+        await db.delete_product(product1)
+        self.assertTrue(await db.get_categories() is None)
 
     async def test_update_product(self):
         product = Models.Product(9090, 'cat68', '12', 'asd cool drum', 'C://dj.png', 12000, 12, 5)

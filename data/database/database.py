@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from data.database.models import Models
 
+
 class Database:
     def __init__(self, info, logger):
         self.engine = create_engine(
@@ -44,12 +45,23 @@ class Database:
 
     async def update_user(self, user: Models.User):
         session = self.session_maker()
-        db_user = session.query(Models.User).filter_by(user_id=user.user_id).first()
-        db_user.basket = user.basket
-        db_user.order_ids = user.order_ids
+        session.query(Models.User).filter_by(user_id=user.user_id).update({
+            'user_id': user.user_id,
+            'cart': user.cart,
+            'order_ids': user.order_ids
+        })
         session.commit()
         await self.logger.info(f'User {user.user_id} is updated')
         session.close()
+
+    async def check_product_in_user_cart(self, user_id, product: Models.Product) -> bool:
+        session = self.session_maker()
+        user = session.query(Models.User).filter_by(user_id=user_id).first()
+        if user.cart:
+            if product.category in user.cart:
+                product_ids = [product_info['product_id'] for product_info in user.cart[product.category]]
+                return product.product_id in product_ids
+        return False
 
     async def insert_product_if_not_exist(self, product: Models.Product):
         session = self.session_maker()
@@ -80,16 +92,38 @@ class Database:
             await self.logger.warning(f"Product {product_id} is not in database")
             return None
 
+    async def get_products_by_category(self, category) -> list | None:
+        session = self.session_maker()
+        data = session.query(Models.Product).filter(Models.Product.category == category).all()
+        session.close()
+        if data:
+            await self.logger.info(f'Fetched products by category: {category}')
+            return data
+        else:
+            await self.logger.info(f'There are no products with category: {category}')
+
+    async def get_categories(self) -> list | None:
+        session = self.session_maker()
+        data = session.query(Models.Product).all()
+        session.close()
+        if data:
+            await self.logger.info('Categories is retrieved')
+            return sorted(list(set([product.category for product in data])), key=lambda x: x[0])
+        else:
+            await self.logger.warning('There are no categories')
+            return None
+
     async def update_product(self, product: Models.Product):
         session = self.session_maker()
-        db_product = session.query(Models.Product).filter_by(product_id=product.product_id).first()
-        db_product.category = product.category
-        db_product.name = product.name
-        db_product.description = product.description
-        db_product.image_url = product.image_url
-        db_product.cost = product.cost
-        db_product.amount = product.amount
-        db_product.discount = product.discount
+        session.query(Models.Product).filter_by(product_id=product.product_id).update({
+            'category': product.category,
+            'name': product.name,
+            'description': product.description,
+            'image_url': product.image_url,
+            'cost': product.cost,
+            'amount': product.amount,
+            'discount': product.discount
+        })
         session.commit()
         await self.logger.info(f'Product {product.product_id} is updated')
         session.close()

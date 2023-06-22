@@ -29,9 +29,6 @@ FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 WEBHOOK_PATH = "/bot/" + BOT_TOKEN
 
-# Chrome Driver <Selenium> [Optional]
-CHROME_DRIVER_VERSION = os.getenv("CHROME_DRIVER_VERSION")
-
-# Qiwi Tokens [Optional]
-QIWI_PUBLIC_TOKEN = os.getenv("QIWI_PUBLIC_TOKEN")
-QIWI_SECRET_TOKEN = os.getenv("QIWI_SECRET_TOKEN")
+# Payment tokens
+SBERBANK = os.getenv('SBERBANK')
+UKASSA = os.getenv('UKASSA')
