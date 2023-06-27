@@ -1,14 +1,13 @@
-from sqladmin import Admin
-from sqladmin.authentication import AuthenticationBackend
-from fastapi import FastAPI, Request, Response
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
-from starlette.middleware.sessions import SessionMiddleware
-
 from typing import Optional
 from uuid import uuid4
 
-from init_loader import db, cf
+from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse, HTMLResponse
+from sqladmin import Admin
+from sqladmin.authentication import AuthenticationBackend
+from starlette.middleware.sessions import SessionMiddleware
+
+from init_loader import db, cf, logger
 from models import UserModel, ProductModel, OrderModel
 
 
@@ -39,7 +38,6 @@ class AdminAuth(AuthenticationBackend):
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=cf.SERVER_SECRET_KEY, )
-templates = Jinja2Templates(directory="templates")
 authentication_backend = AdminAuth(secret_key=cf.SERVER_SECRET_KEY)
 admin = Admin(app=app, engine=db.engine, authentication_backend=authentication_backend)
 admin.add_view(UserModel)
@@ -47,42 +45,43 @@ admin.add_view(ProductModel)
 admin.add_view(OrderModel)
 
 
-@app.get('/set')
-async def setting(response: Response):
-    response.set_cookie(key='token', value='')
-    return True
-
-
 @app.get('/')
 async def home(request: Request):
+    await logger.info('Redirecting from home to login')
     return RedirectResponse('/login')
 
 
 @app.get('/login')
 async def login_get(request: Request):
-    return templates.TemplateResponse('login.html', {'request': request})
+    await logger.info('Logging')
+    with open(cf.BASE_DIR + '/admin_panel/templates/login.html', encoding='utf-8') as f:
+        content = f.read()
+        return HTMLResponse(content=content)
 
 
 @app.post('/login')
 async def login_post(request: Request):
     if await authentication_backend.login(request):
+        await logger.info('Successfully authenticated')
         response = RedirectResponse('/admin', status_code=303)
         response.set_cookie(key='token', value=request.session.get('token'))
         response.set_cookie(key='logout', value=request.cookies.get('logout'))
         return response
+    await logger.warning('Invalid authentication')
     return 'Invalid data'
 
 
 @app.get('/admin')
 async def admin_panel(request: Request):
+    await logger.info('Admin panel')
     return await admin.index(request)
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(
+if __name__ == '__main__':
+    from uvicorn import run
+
+    run(
         app,
-        host=cf.BASE_URL,
-        port=5000,
-        log_level='info'
+        # host=cf.ADMIN_PANEL_HOST,
+        port=int(cf.ADMIN_PANEL_PORT)
     )

@@ -1,8 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.mutable import MutableDict, MutableList
-
-from datetime import datetime
+from sqlalchemy.types import PickleType
 
 base = declarative_base()
 
@@ -10,11 +10,11 @@ base = declarative_base()
 class User(base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer)
-    cart = Column(MutableDict.as_mutable(JSON), default={})
-    order_ids = Column(MutableList.as_mutable(PickleType), default=[])
+    user_id = Column(Integer, unique=True)
+    cart = Column(PickleType, default={})
+    order_ids = Column(PickleType, default=[])
 
-    def __init__(self, user_id: int, cart=None, order_ids=None):
+    def init_values(self, user_id: int, cart=None, order_ids=None):
         if cart is None:
             cart = {}
         if order_ids is None:
@@ -23,15 +23,13 @@ class User(base):
         self.cart = cart
         self.order_ids = order_ids
 
-    __table_args__ = (
-        CheckConstraint(user_id >= 0, name='positive_value_check'),
-    )
+        return self
 
 
 class Product(base):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    product_id = Column(Integer)
+    product_id = Column(Integer, unique=True)
     category = Column(String)
     name = Column(String)
     description = Column(Text)
@@ -40,11 +38,11 @@ class Product(base):
     amount = Column(Integer)
     discount = Column(Integer, default=0)
 
-    def __init__(self,
-                 product_id: int, category: str, name: str,
-                 description: str, image_url: str, cost: float,
-                 amount: int, discount=0
-                 ):
+    def init_values(self,
+                    product_id: int, category: str, name: str,
+                    description: str, image_url: str, cost: float,
+                    amount: int, discount=0
+                    ):
         self.product_id = product_id
         self.category = category
         self.name = name
@@ -54,28 +52,21 @@ class Product(base):
         self.amount = amount
         self.discount = discount
 
-    __table_args__ = (
-        CheckConstraint(product_id >= 0, name='positive_value_check'),
-        CheckConstraint(cost >= 0, name='positive_value_check'),
-        CheckConstraint(amount >= 0, name='positive_value_check'),
-        CheckConstraint(discount >= 0, name='positive_value_check'),
-    )
+        return self
 
 
 class Order(base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    order_id = Column(String)
-    products_info = Column(MutableDict.as_mutable(JSON), default={})
+    order_id = Column(String, unique=True)
+    products_info = Column(PickleType)
     address = Column(String)
     trade_time = Column(DateTime)
 
-    def __init__(self, order_id: str, products_info: dict, address: str, trade_time: datetime):
+    def init_values(self, order_id: str, products_info: dict, address: str, trade_time: datetime):
         self.order_id = order_id
         self.products_info = products_info
         self.address = address
         self.trade_time = trade_time
 
-    __table_args__ = (
-        CheckConstraint(order_id >= 0, name='positive_value_check'),
-    )
+        return self

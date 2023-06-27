@@ -1,7 +1,8 @@
-from fastapi import Request
+from sqladmin import ModelAdmin
+
+from typing import Any
 
 from data.database.models import User, Product, Order
-from sqladmin import ModelAdmin
 
 
 class UserModel(ModelAdmin, model=User):
@@ -21,4 +22,3 @@ class ProductModel(ModelAdmin, model=Product):
 class OrderModel(ModelAdmin, model=Order):
     column_list = [Order.id, Order.order_id, Order.products_info, Order.address, Order.trade_time]
     can_edit = False
-

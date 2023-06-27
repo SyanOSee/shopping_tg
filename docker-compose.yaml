@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres_database:
+    container_name: postgres_database_container
+    image: postgres:alpine3.18
+    ports:
+      - "5432:${DATABASE_PORT}"
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    restart: always
+
+  admin_panel:
+    build: .
+    container_name: admin_panel_container
+    restart: always
+    depends_on:
+      - postgres_database
+    links:
+      - postgres_database
+    ports:
+      - "5000:${ADMIN_PANEL_PORT}"
+    volumes:
+      - ./admin_panel/admin/:/app

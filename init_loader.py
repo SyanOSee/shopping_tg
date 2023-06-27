@@ -1,5 +1,4 @@
 import asyncio
-from collections import namedtuple
 
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -26,11 +25,5 @@ async def anti_spam(*args, **kwargs):
 # Logging object
 logger = Logger(cf.LOGGING_PATH)
 
-# Database information
-DbInfo = namedtuple("DbInfo", ["path"])
-db_info = DbInfo(
-    path=cf.DATABASE_PATH,
-)
-
 # Database
-db = Database(info=db_info, logger=logger)
+db = Database(logger=logger)

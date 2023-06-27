@@ -21,8 +21,8 @@ async def on_startup():
     await logger.warning("BOT STARTUP")
     await logger.clear_log_file()
     webhook_info = await bot.get_webhook_info()
-    if webhook_info.url != cf.NGROK_URL + cf.WEBHOOK_PATH:
-        await bot.set_webhook(cf.NGROK_URL + cf.WEBHOOK_PATH)
+    if webhook_info.url != cf.BASE_URL + cf.WEBHOOK_PATH:
+        await bot.set_webhook(cf.BASE_URL + cf.WEBHOOK_PATH)
 
 @app.on_event('shutdown')
 async def on_shutdown():
