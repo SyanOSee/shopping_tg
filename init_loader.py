@@ -4,7 +4,7 @@ from collections import namedtuple
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-import app_config as cf
+import config as cf
 from data.database.database import Database
 from utils.logger import Logger
 
@@ -19,8 +19,9 @@ dp = Dispatcher(
 )
 
 # anti-spam function
-async def anti_spam(*args):
-    await args[0].answer("*Спам запрещен!*", parse_mode="MarkdownV2")
+async def anti_spam(*args, **kwargs):
+    print(args)
+    await args[0].answer('<b>Спам запрещен!</b>', parse_mode='html')
 
 # Logging object
 logger = Logger(cf.LOGGING_PATH)

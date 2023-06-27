@@ -1,7 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 
-from data.database.models import Models
+from data.database.models import User, Product, Order, base
 
 
 class Database:
@@ -11,9 +11,9 @@ class Database:
         self.session_maker = sessionmaker(bind=self.engine)
         self.logger = logger
 
-        Models.base.metadata.create_all(self.engine)
+        base.metadata.create_all(self.engine)
 
-    async def insert_user_if_not_exist(self, user: Models.User):
+    async def insert_user_if_not_exist(self, user: User):
         session = self.session_maker()
         db_user = await self.get_user_by_id(user.user_id)
         if db_user:
@@ -24,16 +24,16 @@ class Database:
             await self.logger.info(f'User {user.user_id} is added to database')
         session.close()
 
-    async def delete_user(self, user: Models.User):
+    async def delete_user(self, user: User):
         session = self.session_maker()
-        session.query(Models.User).filter_by(user_id=user.user_id).delete()
+        session.query(User).filter_by(user_id=user.user_id).delete()
         session.commit()
         await self.logger.warning(f'User {user.user_id} is deleted from database')
         session.close()
 
-    async def get_user_by_id(self, user_id) -> Models.User | None:
+    async def get_user_by_id(self, user_id) -> User | None:
         session = self.session_maker()
-        data = session.query(Models.User).filter(Models.User.user_id == user_id).first()
+        data = session.query(User).filter(User.user_id == user_id).first()
         if data:
             await self.logger.info(f'User {user_id} is retrieved from database')
             session.close()
@@ -43,9 +43,9 @@ class Database:
             session.close()
             return None
 
-    async def update_user(self, user: Models.User):
+    async def update_user(self, user: User):
         session = self.session_maker()
-        session.query(Models.User).filter_by(user_id=user.user_id).update({
+        session.query(User).filter_by(user_id=user.user_id).update({
             'user_id': user.user_id,
             'cart': user.cart,
             'order_ids': user.order_ids
@@ -54,16 +54,16 @@ class Database:
         await self.logger.info(f'User {user.user_id} is updated')
         session.close()
 
-    async def check_product_in_user_cart(self, user_id, product: Models.Product) -> bool:
+    async def check_product_in_user_cart(self, user_id, product: Product) -> bool:
         session = self.session_maker()
-        user = session.query(Models.User).filter_by(user_id=user_id).first()
+        user = session.query(User).filter_by(user_id=user_id).first()
         if user.cart:
             if product.category in user.cart:
                 product_ids = [product_info['product_id'] for product_info in user.cart[product.category]]
                 return product.product_id in product_ids
         return False
 
-    async def insert_product_if_not_exist(self, product: Models.Product):
+    async def insert_product_if_not_exist(self, product: Product):
         session = self.session_maker()
         db_product = await self.get_product_by_id(product.product_id)
         if db_product:
@@ -74,16 +74,16 @@ class Database:
             await self.logger.info(f"Product {product.product_id} is added to database")
         session.close()
 
-    async def delete_product(self, product: Models.Product):
+    async def delete_product(self, product: Product):
         session = self.session_maker()
-        session.query(Models.Product).filter_by(product_id=product.product_id).delete()
+        session.query(Product).filter_by(product_id=product.product_id).delete()
         session.commit()
         await self.logger.warning(f"Product {product.product_id} is deleted")
         session.close()
 
-    async def get_product_by_id(self, product_id) -> Models.Product | None:
+    async def get_product_by_id(self, product_id) -> Product | None:
         session = self.session_maker()
-        data = session.query(Models.Product).filter(Models.Product.product_id == product_id).first()
+        data = session.query(Product).filter(Product.product_id == product_id).first()
         session.close()
         if data:
             await self.logger.info(f"Product {product_id} is retrieved from database")
@@ -94,7 +94,7 @@ class Database:
 
     async def get_products_by_category(self, category) -> list | None:
         session = self.session_maker()
-        data = session.query(Models.Product).filter(Models.Product.category == category).all()
+        data = session.query(Product).filter(Product.category == category).all()
         session.close()
         if data:
             await self.logger.info(f'Fetched products by category: {category}')
@@ -104,7 +104,7 @@ class Database:
 
     async def get_categories(self) -> list | None:
         session = self.session_maker()
-        data = session.query(Models.Product).all()
+        data = session.query(Product).all()
         session.close()
         if data:
             await self.logger.info('Categories is retrieved')
@@ -113,9 +113,9 @@ class Database:
             await self.logger.warning('There are no categories')
             return None
 
-    async def update_product(self, product: Models.Product):
+    async def update_product(self, product: Product):
         session = self.session_maker()
-        session.query(Models.Product).filter_by(product_id=product.product_id).update({
+        session.query(Product).filter_by(product_id=product.product_id).update({
             'category': product.category,
             'name': product.name,
             'description': product.description,
@@ -128,23 +128,23 @@ class Database:
         await self.logger.info(f'Product {product.product_id} is updated')
         session.close()
 
-    async def insert_order(self, order: Models.Order):
+    async def insert_order(self, order: Order):
         session = self.session_maker()
         session.add(order)
         session.commit()
         await self.logger.info(f'Order {order.order_id} inserted in database')
         session.close()
 
-    async def delete_order(self, order: Models.Order):
+    async def delete_order(self, order: Order):
         session = self.session_maker()
-        session.query(Models.Order).filter_by(order_id=order.order_id).delete()
+        session.query(Order).filter_by(order_id=order.order_id).delete()
         session.commit()
         await self.logger.warning(f"Order {order.order_id} is deleted")
         session.close()
 
-    async def get_order_by_id(self, order_id) -> Models.Order | None:
+    async def get_order_by_id(self, order_id) -> Order | None:
         session = self.session_maker()
-        data = session.query(Models.Order).filter_by(order_id=order_id).first()
+        data = session.query(Order).filter_by(order_id=order_id).first()
         if data:
             await self.logger.info(f'Order {order_id} is retrieved from database')
             session.close()

@@ -43,7 +43,7 @@ async def faq_msg() -> str:
            ' - Да, мы предоставляем гарантию на нашу продукцию. Срок гарантии может различаться в зависимости от категории товара.'
 
 
-async def get_product_card_info_msg(user_id: int, product: Models.Product) -> (str, InlineKeyboardMarkup):
+async def get_product_card_info_msg(user_id: int, product: Product) -> (str, InlineKeyboardMarkup):
     from init_loader import db
     message = f'<b>{product.name}</b>\n\n' \
               f'<b>Описание:</b>\n{product.description}\n\n' \
@@ -73,7 +73,7 @@ async def empty_catalogue_msg() -> str:
     return 'Каталог пуст'
 
 
-async def cart_msg(category: str, product_info: dict, product: Models.Product) -> (str, InlineKeyboardMarkup):
+async def cart_msg(category: str, product_info: dict, product: Product) -> (str, InlineKeyboardMarkup):
     total_cost = round(product_info["amount"] * product.cost * ((100 - product.discount) / 100))
     msg = f'Категория: {category}\n' \
           f'Название: {product_info["name"]}\n' \
@@ -88,7 +88,7 @@ async def cart_msg(category: str, product_info: dict, product: Models.Product) -
     return msg, keyboard
 
 
-async def update_cart_msg(init_msg: str, cart_amount: int, total_cost: float, product: Models.Product) -> (
+async def update_cart_msg(init_msg: str, cart_amount: int, total_cost: float, product: Product) -> (
         str, InlineKeyboardMarkup):
     msg = init_msg.split('\n')
     msg[2] = f'Количество: {cart_amount} шт. (max: {product.amount})'

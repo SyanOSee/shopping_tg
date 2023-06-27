@@ -2,36 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f22f1588-4dd2-4ea8-ad2e-10e9ec42acc9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/bot/handlers/callback_handler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bot/handlers/chat_handler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bot/keyboards/inline_keyboards.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/str_resources.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/flask_models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/example_callbacks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/database/database.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/handlers/chat_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/handlers/chat_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/keyboards/inline_keyboards.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/keyboards/inline_keyboards.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/database/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/database/database.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/database/database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/database/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/database/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/data/log.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/handlers/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/admin_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/callbacks_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/main_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/purchase_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/template.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/init_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/init_loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keyboards/inline_keyboards.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/keyboards/reply_keyboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/keyboards/reply_keyboard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/states/example_state.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_database.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/constants.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/str_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/admin_panel.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webhook.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/str_resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/str_resources.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/flask_models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/admin/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/login.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,13 +53,35 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\admin_panel" />
+      <recent name="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot" />
+      <recent name="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\data" />
       <recent name="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\bot" />
       <recent name="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\keyboards" />
-      <recent name="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\web\templates\admin" />
-      <recent name="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\web" />
     </key>
   </component>
   <component name="RunManager" selected="Python.app">
+    <configuration name="admin" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ShopBot" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/admin_panel" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/admin_panel/admin.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ShopBot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -94,7 +103,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="callback_handler (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="panel" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ShopBot" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -102,53 +111,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bot/handlers" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/admin_panel" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bot/handlers/callback_handler.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="callback_handler" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ShopBot" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bot/handlers" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\bot\handlers\callback_handler.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="server (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ShopBot" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/web" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/server.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/admin_panel/panel.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -165,11 +132,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/web" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\prp48\Desktop\Projects\Telegram\ShopBot\web\server.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/server.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -195,10 +162,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.app" />
+        <item itemvalue="Python.admin" />
+        <item itemvalue="Python.panel" />
+        <item itemvalue="Python.server" />
         <item itemvalue="Python tests.Python tests for test_database.test_database" />
-        <item itemvalue="Python.callback_handler (1)" />
-        <item itemvalue="Python.server (1)" />
-        <item itemvalue="Python.callback_handler" />
       </list>
     </recent_temporary>
   </component>
@@ -212,16 +179,5 @@
       <updated>1686577774104</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/bot/handlers/callback_handler.py</url>
-          <line>72</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

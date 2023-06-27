@@ -1,0 +1,6 @@
+/venv
+/data/log.log
+/data/database/database.db
+/.env
+.idea
+__pycache__

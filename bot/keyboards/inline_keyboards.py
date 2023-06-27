@@ -1,7 +1,8 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 
-from data.database.models import Models
+from data.database.models import Product
+
 
 async def __go_back_name() -> str:
     return 'Вернуться'
@@ -39,7 +40,7 @@ async def get_back_to_categories_keyboard() -> InlineKeyboardMarkup:
     )
 
 
-async def get_add_to_cart_keyboard(product: Models.Product) -> InlineKeyboardMarkup:
+async def get_add_to_cart_keyboard(product: Product) -> InlineKeyboardMarkup:
     """
     Generates an inline keyboard markup with an "Add to Cart" button.
     """
@@ -50,7 +51,7 @@ async def get_add_to_cart_keyboard(product: Models.Product) -> InlineKeyboardMar
     )
 
 
-async def get_remove_from_cart_keyboard(product: Models.Product, in_cart: bool) -> InlineKeyboardMarkup:
+async def get_remove_from_cart_keyboard(product: Product, in_cart: bool) -> InlineKeyboardMarkup:
     """
     Generates an inline keyboard markup with a "Remove from Cart" button.
     """

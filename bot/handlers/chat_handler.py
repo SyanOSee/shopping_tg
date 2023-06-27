@@ -1,12 +1,12 @@
 from aiogram.types import *
 
+from init_loader import *
 from utils.str_resources import *
-from init_loader import dp, db, logger, anti_spam
 from bot.keyboards.reply_keyboard import menu_keyboard
 
 
 @dp.message_handler(commands=['start'])
-@dp.throttled(anti_spam, rate=1)
+@dp.throttled(anti_spam, rate=cf.SPAM_RATE)
 async def start(message: Message):
     """
     Handler for the '/start' command.
@@ -18,7 +18,7 @@ async def start(message: Message):
 
 
 @dp.message_handler(content_types=['text'])
-@dp.throttled(anti_spam, rate=1)
+@dp.throttled(anti_spam, rate=cf.SPAM_RATE)
 async def menu_keyboard_handler(message: Message):
     """
     Handler for processing text messages based on the menu keyboard options.

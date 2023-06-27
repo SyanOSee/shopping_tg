@@ -1,68 +1,28 @@
-2023-06-22:19:47:25,204 INFO     [dispatcher.py:359] Start polling.
-2023-06-22:19:47:29,497 INFO     [logger.py:35] Menu Keyboard Handler
-2023-06-22:19:47:29,497 INFO     [logger.py:35] Command - \U0001f4b8 Оплата
-2023-06-22:19:47:30,905 INFO     [logger.py:35] Menu Keyboard Handler
-2023-06-22:19:47:30,905 INFO     [logger.py:35] Command - \U0001f6d2 Корзина
-2023-06-22:19:47:30,910 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:47:30,912 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:47:30,914 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:47:33,534 INFO     [logger.py:35] Menu Keyboard Handler
-2023-06-22:19:47:33,534 INFO     [logger.py:35] Command - \U0001f6cf Выбрать мебель
-2023-06-22:19:47:33,536 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:47:35,275 INFO     [logger.py:35] Handling category callback
-2023-06-22:19:47:35,852 INFO     [logger.py:35] Fetched products by category: Стулья
-2023-06-22:19:47:39,198 INFO     [logger.py:35] Handling back to categories callback
-2023-06-22:19:47:39,990 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:47:42,212 INFO     [logger.py:35] Handling category callback
-2023-06-22:19:47:42,780 INFO     [logger.py:35] Fetched products by category: Стулья
-2023-06-22:19:47:44,719 INFO     [logger.py:35] Handling remove from cart callback
-2023-06-22:19:47:44,722 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:47:44,725 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:47:44,742 INFO     [logger.py:35] User 5809315539 is updated
-2023-06-22:19:47:46,379 INFO     [logger.py:35] Handling back to categories callback
-2023-06-22:19:47:47,148 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:47:48,617 INFO     [logger.py:35] Handling category callback
-2023-06-22:19:47:49,113 INFO     [logger.py:35] Fetched products by category: Стулья
-2023-06-22:19:47:51,747 INFO     [logger.py:35] Handling add to cart data callback
-2023-06-22:19:47:51,750 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:47:51,750 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:47:51,764 INFO     [logger.py:35] User 5809315539 is updated
-2023-06-22:19:47:54,122 INFO     [logger.py:35] Handling back to categories callback
-2023-06-22:19:47:54,917 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:47:56,475 INFO     [logger.py:35] Handling category callback
-2023-06-22:19:47:56,977 INFO     [logger.py:35] Fetched products by category: Стулья
-2023-06-22:19:47:59,65 INFO     [logger.py:35] Handling remove from cart callback
-2023-06-22:19:47:59,69 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:47:59,70 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:47:59,82 INFO     [logger.py:35] User 5809315539 is updated
-2023-06-22:19:48:00,499 INFO     [logger.py:35] Handling back to categories callback
-2023-06-22:19:48:01,260 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:48:02,808 INFO     [logger.py:35] Handling category callback
-2023-06-22:19:48:03,299 INFO     [logger.py:35] Fetched products by category: Стулья
-2023-06-22:19:48:04,969 INFO     [logger.py:35] Handling add to cart data callback
-2023-06-22:19:48:04,972 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:48:04,973 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:48:04,984 INFO     [logger.py:35] User 5809315539 is updated
-2023-06-22:19:48:06,624 INFO     [logger.py:35] Handling back to categories callback
-2023-06-22:19:48:07,396 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:48:08,977 INFO     [logger.py:35] Handling category callback
-2023-06-22:19:48:09,533 INFO     [logger.py:35] Fetched products by category: Стулья
-2023-06-22:19:48:11,948 INFO     [logger.py:35] Handling remove from cart callback
-2023-06-22:19:48:11,951 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:48:11,952 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:48:11,964 INFO     [logger.py:35] User 5809315539 is updated
-2023-06-22:19:48:13,707 INFO     [logger.py:35] Menu Keyboard Handler
-2023-06-22:19:48:13,708 INFO     [logger.py:35] Command - \U0001f6d2 Корзина
-2023-06-22:19:48:13,709 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:48:15,49 INFO     [logger.py:35] Handling add to cart data callback
-2023-06-22:19:48:15,52 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:48:15,55 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:48:15,96 INFO     [logger.py:35] User 5809315539 is updated
-2023-06-22:19:48:17,106 INFO     [logger.py:35] Menu Keyboard Handler
-2023-06-22:19:48:17,106 INFO     [logger.py:35] Command - \U0001f6d2 Корзина
-2023-06-22:19:48:17,107 INFO     [logger.py:35] User 5809315539 is retrieved from database
-2023-06-22:19:48:17,110 INFO     [logger.py:35] Categories is retrieved
-2023-06-22:19:48:17,111 INFO     [logger.py:35] Product 11 is retrieved from database
-2023-06-22:19:48:25,102 WARNING  [logger.py:40] BOT SHUTDOWN
-2023-06-22:19:48:25,102 INFO     [dispatcher.py:434] Stop polling...
-2023-06-22:19:48:25,102 WARNING  [executor.py:329] Goodbye!
+2023-06-25:13:32:35,592 INFO     [main.py:281] 1 change detected
+2023-06-25:13:39:10,561 INFO     [main.py:281] 1 change detected
+2023-06-25:13:40:14,529 INFO     [main.py:281] 1 change detected
+2023-06-25:13:40:27,50 INFO     [main.py:281] 1 change detected
+2023-06-25:13:40:52,167 INFO     [main.py:281] 1 change detected
+2023-06-25:13:40:54,376 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:06,680 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:09,869 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:11,645 INFO     [main.py:281] 2 changes detected
+2023-06-25:13:41:20,796 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:23,564 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:24,577 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:28,981 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:32,170 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:35,370 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:35,872 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:36,381 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:36,948 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:41,600 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:42,813 INFO     [main.py:281] 409 changes detected
+2023-06-25:13:41:50,20 WARNING  [logger.py:40] BOT SHUTDOWN
+2023-06-25:13:41:50,67 ERROR    [base_events.py:1744] Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000025E1A3CB3D0>
+2023-06-25:13:41:50,508 INFO     [main.py:281] 3 changes detected
+2023-06-25:13:41:55,649 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:58,498 INFO     [main.py:281] 1 change detected
+2023-06-25:13:41:59,884 INFO     [main.py:281] 1 change detected
+2023-06-25:13:42:03,645 INFO     [main.py:281] 1 change detected
