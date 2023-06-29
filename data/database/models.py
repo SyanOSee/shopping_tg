@@ -10,7 +10,7 @@ base = declarative_base()
 class User(base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, unique=True)
+    user_id = Column(BigInteger, unique=True)
     cart = Column(PickleType, default={})
     order_ids = Column(PickleType, default=[])
 
@@ -29,7 +29,7 @@ class User(base):
 class Product(base):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    product_id = Column(Integer, unique=True)
+    product_id = Column(BigInteger, unique=True)
     category = Column(String)
     name = Column(String)
     description = Column(Text)
@@ -57,7 +57,7 @@ class Product(base):
 
 class Order(base):
     __tablename__ = 'orders'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     order_id = Column(String, unique=True)
     products_info = Column(PickleType)
     address = Column(String)

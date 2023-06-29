@@ -2,6 +2,7 @@ from aiogram.types import *
 
 from init_loader import *
 from utils.str_resources import *
+from data.database.models import User
 from bot.keyboards.reply_keyboard import menu_keyboard
 
 
@@ -14,7 +15,7 @@ async def start(message: Message):
     """
     await logger.info('Start Command')
     await message.answer(await greeting_msg(), parse_mode='html', reply_markup=menu_keyboard)
-    await db.insert_user_if_not_exist(Models.User(message.from_user.id))
+    await db.insert_user_if_not_exist(User().init_values(message.from_user.id))
 
 
 @dp.message_handler(content_types=['text'])

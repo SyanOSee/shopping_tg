@@ -8,7 +8,7 @@ from sqladmin.authentication import AuthenticationBackend
 from starlette.middleware.sessions import SessionMiddleware
 
 from init_loader import db, cf, logger
-from models import UserModel, ProductModel, OrderModel
+from web.models import UserModel, ProductModel, OrderModel
 
 
 class AdminAuth(AuthenticationBackend):
@@ -54,7 +54,7 @@ async def home(request: Request):
 @app.get('/login')
 async def login_get(request: Request):
     await logger.info('Logging')
-    with open(cf.BASE_DIR + '/admin_panel/templates/login.html', encoding='utf-8') as f:
+    with open(cf.BASE_DIR + '/web/templates/login.html', encoding='utf-8') as f:
         content = f.read()
         return HTMLResponse(content=content)
 
@@ -75,13 +75,3 @@ async def login_post(request: Request):
 async def admin_panel(request: Request):
     await logger.info('Admin panel')
     return await admin.index(request)
-
-
-if __name__ == '__main__':
-    from uvicorn import run
-
-    run(
-        app,
-        # host=cf.ADMIN_PANEL_HOST,
-        port=int(cf.ADMIN_PANEL_PORT)
-    )

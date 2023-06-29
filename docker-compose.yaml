@@ -10,16 +10,16 @@ services:
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     restart: always
+    volumes:
+      - ./data/database/volume:/app/database/volume
 
-  admin_panel:
+  application:
     build: .
-    container_name: admin_panel_container
+    container_name: application
     restart: always
     depends_on:
       - postgres_database
     links:
       - postgres_database
     ports:
-      - "5000:${ADMIN_PANEL_PORT}"
-    volumes:
-      - ./admin_panel/admin/:/app
+      - "5000:${APP_PORT}"

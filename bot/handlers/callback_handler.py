@@ -173,15 +173,15 @@ async def handle_change_amount_callback(callback: CallbackQuery):
 
 
 @dp.callback_query_handler(lambda query: 'payment_data' in query.data)
-async def handle_payment_callback(payment_callback: CallbackQuery):
+async def handle_payment_callback(callback: CallbackQuery):
     """
     Callback handler for processing payment.
     """
     await logger.info('Handling payment callback')
-    await bot.answer_callback_query(payment_callback.id)
+    await bot.answer_callback_query(callback.id)
 
     # Match the payment provider and assign the corresponding provider token
-    provider = await __process_callback_data(payment_callback.data)
+    provider = await __process_callback_data(callback.data)
     match provider:
         case 'Sberbank':
             provider_token = cf.SBERBANK
@@ -191,7 +191,7 @@ async def handle_payment_callback(payment_callback: CallbackQuery):
             provider_token = ''
 
     # Prepare the prices for the invoice
-    user = await db.get_user_by_id(payment_callback.from_user.id)
+    user = await db.get_user_by_id(callback.from_user.id)
     prices = []
     for cat, cat_products in user.cart.items():
         for product in cat_products:
@@ -199,18 +199,20 @@ async def handle_payment_callback(payment_callback: CallbackQuery):
 
     # Send the invoice to the user
     title, description = await invoice_msg()
-    await bot.send_invoice(
-        chat_id=payment_callback.message.chat.id,
-        title=title,
-        description=description,
-        provider_token=provider_token,
-        need_shipping_address=True,
-        currency='RUB',
-        payload='payload',
-        prices=prices,
-        protect_content=True,
-    )
-
+    if prices:
+        await bot.send_invoice(
+            chat_id=callback.message.chat.id,
+            title=title,
+            description=description,
+            provider_token=provider_token,
+            need_shipping_address=True,
+            currency='RUB',
+            payload='payload',
+            prices=prices,
+            protect_content=True,
+        )
+    else:
+        await callback.message.answer(await nothing_to_pay(), parse_mode='html')
 
 @dp.pre_checkout_query_handler()
 async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):

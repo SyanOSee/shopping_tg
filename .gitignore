@@ -1,5 +1,7 @@
+.idea
 data/log.log
 data/database/database.db
+data/database/volume
 
 ### VirtualEnv template
 # Virtualenv
