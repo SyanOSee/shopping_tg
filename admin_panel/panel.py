@@ -1,14 +1,18 @@
 from typing import Optional
 from uuid import uuid4
+import os
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqladmin import Admin
 from sqladmin.authentication import AuthenticationBackend
 from starlette.middleware.sessions import SessionMiddleware
 
-from init_loader import db, cf, logger
-from web.models import UserModel, ProductModel, OrderModel
+from models import UserModel, ProductModel, OrderModel
+from init_loader import db, cf
+
+load_dotenv()
 
 
 class AdminAuth(AuthenticationBackend):
@@ -47,14 +51,12 @@ admin.add_view(OrderModel)
 
 @app.get('/')
 async def home(request: Request):
-    await logger.info('Redirecting from home to login')
     return RedirectResponse('/login')
 
 
 @app.get('/login')
 async def login_get(request: Request):
-    await logger.info('Logging')
-    with open(cf.BASE_DIR + '/web/templates/login.html', encoding='utf-8') as f:
+    with open(os.path.dirname(os.path.abspath(__file__)) + '/web/templates/login.html', encoding='utf-8') as f:
         content = f.read()
         return HTMLResponse(content=content)
 
@@ -62,16 +64,23 @@ async def login_get(request: Request):
 @app.post('/login')
 async def login_post(request: Request):
     if await authentication_backend.login(request):
-        await logger.info('Successfully authenticated')
         response = RedirectResponse('/admin', status_code=303)
         response.set_cookie(key='token', value=request.session.get('token'))
         response.set_cookie(key='logout', value=request.cookies.get('logout'))
         return response
-    await logger.warning('Invalid authentication')
     return 'Invalid data'
 
 
 @app.get('/admin')
 async def admin_panel(request: Request):
-    await logger.info('Admin panel')
     return await admin.index(request)
+
+
+if __name__ == '__main__':
+    from uvicorn import run
+
+    run(
+        app,
+        host=cf.SERVER_HOST,
+        port=int(cf.SERVER_PORT)
+    )

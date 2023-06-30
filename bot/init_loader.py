@@ -19,7 +19,6 @@ dp = Dispatcher(
 
 # anti-spam function
 async def anti_spam(*args, **kwargs):
-    print(args)
     await args[0].answer('<b>Спам запрещен!</b>', parse_mode='html')
 
 # Logging object

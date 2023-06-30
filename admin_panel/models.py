@@ -1,14 +1,10 @@
 from sqladmin import ModelAdmin
-
-from typing import Any
-
 from data.database.models import User, Product, Order
 
 
 class UserModel(ModelAdmin, model=User):
     column_list = [User.id, User.user_id, User.cart, User.order_ids]
     can_edit = False
-
 
 class ProductModel(ModelAdmin, model=Product):
     column_list = [

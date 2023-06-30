@@ -23,8 +23,8 @@ DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 DATABASE_PATH = BASE_DIR + os.getenv("DATABASE_PATH")
 
 # Server
-APP_HOST = os.getenv('APP_HOST')
-APP_PORT = os.getenv('APP_PORT')
+SERVER_HOST = os.getenv('SERVER_HOST')
+SERVER_PORT = os.getenv('SERVER_PORT')
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
 SERVER_SECRET_KEY = os.getenv("SERVER_SECRET_KEY")
 WEBHOOK_PATH = os.getenv("WEBHOOK_PATH") + '/' + BOT_TOKEN
