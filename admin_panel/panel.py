@@ -1,6 +1,5 @@
 from typing import Optional
 from uuid import uuid4
-import os
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
@@ -9,8 +8,8 @@ from sqladmin import Admin
 from sqladmin.authentication import AuthenticationBackend
 from starlette.middleware.sessions import SessionMiddleware
 
-from models import UserModel, ProductModel, OrderModel
 from init_loader import db, cf
+from models import UserModel, ProductModel, OrderModel
 
 load_dotenv()
 
@@ -56,7 +55,7 @@ async def home(request: Request):
 
 @app.get('/login')
 async def login_get(request: Request):
-    with open(os.path.dirname(os.path.abspath(__file__)) + '/web/templates/login.html', encoding='utf-8') as f:
+    with open(cf.BASE_DIR + '/templates/login.html', encoding='utf-8') as f:
         content = f.read()
         return HTMLResponse(content=content)
 
@@ -68,7 +67,7 @@ async def login_post(request: Request):
         response.set_cookie(key='token', value=request.session.get('token'))
         response.set_cookie(key='logout', value=request.cookies.get('logout'))
         return response
-    return 'Invalid data'
+    return 'Invalid user or password'
 
 
 @app.get('/admin')
@@ -78,9 +77,8 @@ async def admin_panel(request: Request):
 
 if __name__ == '__main__':
     from uvicorn import run
-
     run(
         app,
         host=cf.SERVER_HOST,
-        port=int(cf.SERVER_PORT)
+        port=int(cf.SERVER_PORT),
     )
