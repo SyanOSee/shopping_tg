@@ -3,7 +3,7 @@ from aiogram.types import *
 from init_loader import *
 from utils.str_resources import *
 from data.database.models import User
-from bot.keyboards.reply_keyboard import menu_keyboard
+from chat.keyboards.reply_keyboard import menu_keyboard
 
 
 @dp.message_handler(commands=['start'])
@@ -14,7 +14,7 @@ async def start(message: Message):
     Sends a greeting message and inserts the user into the database if not already present.
     """
     await logger.info('Start Command')
-    await message.answer(await greeting_msg(), parse_mode='html', reply_markup=menu_keyboard)
+    await message.answer(await greeting_msg(), reply_markup=menu_keyboard)
     await db.insert_user_if_not_exist(User().init_values(message.from_user.id))
 
 
@@ -29,9 +29,9 @@ async def menu_keyboard_handler(message: Message):
 
     # Check the message text and execute corresponding actions
     if message.text == about_name():
-        await message.answer(await about_msg(), parse_mode='html')
+        await message.answer(await about_msg())
     elif message.text == faq_name():
-        await message.answer(await faq_msg(), parse_mode='html')
+        await message.answer(await faq_msg())
     elif message.text == cart_name():
         await handle_cart(message)
     elif message.text == choose_product_name():
@@ -51,9 +51,9 @@ async def handle_cart(message: Message):
             for product_info in user.cart[category]:
                 product = await db.get_product_by_id(product_info['product_id'])
                 msg, keyboard = await cart_msg(category, product_info, product)
-                await message.answer(msg, parse_mode='html', reply_markup=keyboard)
+                await message.answer(msg, reply_markup=keyboard)
     else:
-        await message.answer(await empty_cart_msg(), parse_mode='html')
+        await message.answer(await empty_cart_msg())
 
 
 async def handle_payment(message: Message):
@@ -62,7 +62,7 @@ async def handle_payment(message: Message):
     Sends a message with payment options.
     """
     msg, keyboard = await choose_payment_msg()
-    await message.answer(msg, parse_mode='html', reply_markup=keyboard)
+    await message.answer(msg, reply_markup=keyboard)
 
 
 async def handle_choose_product(message: Message):
@@ -73,6 +73,6 @@ async def handle_choose_product(message: Message):
     categories = await db.get_categories()
     if categories:
         msg, keyboard = await choose_category_msg(categories)
-        await message.answer(text=msg, parse_mode='html', reply_markup=keyboard)
+        await message.answer(text=msg, reply_markup=keyboard)
     else:
-        await message.answer(await empty_catalogue_msg(), parse_mode='html')
+        await message.answer(await empty_catalogue_msg())

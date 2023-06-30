@@ -1,4 +1,5 @@
-from init_loader import logger, dp
+from init_loader import logger
+from chat.handlers import dp
 
 
 # Set up the startup and shutdown handlers
@@ -14,5 +15,6 @@ async def on_shutdown(dp):
 
 
 if __name__ == '__main__':
-    from aiogram.utils.executor import start_polling
-    start_polling(dispatcher=dp, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)
+    from aiogram.utils import executor
+
+    executor.start_polling(dispatcher=dp, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)

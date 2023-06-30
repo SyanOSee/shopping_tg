@@ -1,4 +1,4 @@
-from bot.keyboards.inline_keyboards import *
+from chat.keyboards.inline_keyboards import *
 
 
 def about_name() -> str:
@@ -108,7 +108,7 @@ async def update_cart_msg(init_msg: str, cart_amount: int, total_cost: float, pr
 
 
 async def invoice_msg() -> (str, str):
-    return 'Оплата товара', 'Введите необходимые данные'
+    return 'Оплата товара', 'Тестовая оплата\n\nAddress 1 -  Номер дома и название улицы\nAddress 2 -  Номер квартиры / апартаментов / корпуса (номер квартиры может содержать не только цифры, но и буквы)'
 
 
 async def choose_payment_msg() -> (str, InlineKeyboardMarkup):

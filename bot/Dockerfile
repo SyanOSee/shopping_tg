@@ -1,3 +1,5 @@
 FROM python:3.10
-COPY . .
-RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
+COPY . /usr/src/app/bot/
+WORKDIR /usr/src/app/bot/
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r /usr/src/app/bot/requirements.txt
+CMD ["python", "app.py"]

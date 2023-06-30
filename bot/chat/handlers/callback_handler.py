@@ -2,8 +2,9 @@ from collections import defaultdict
 
 from aiogram.types import *
 
-from init_loader import dp, db, cf, bot, logger
 from utils.str_resources import *
+from data.database.models import Order
+from init_loader import dp, db, cf, bot, logger
 
 # Dictionary to store message IDs of product cards sent for each user
 user_msg_id_sent_products = defaultdict(list)
@@ -45,7 +46,6 @@ async def handle_category_callback(callback: CallbackQuery):
             chat_id=callback.message.chat.id,
             photo=product.image_url,
             caption=msg,
-            parse_mode='html',
             reply_markup=keyboard
         )
 
@@ -57,7 +57,6 @@ async def handle_category_callback(callback: CallbackQuery):
     await bot.send_message(
         chat_id=callback.message.chat.id,
         text=msg,
-        parse_mode='html',
         reply_markup=keyboard
     )
 
@@ -68,7 +67,7 @@ async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     Callback handler for going back to catalogue.
     Deletes previously sent messages and invokes the handler to choose a product.
     """
-    from bot.handlers.chat_handler import handle_choose_product
+    from chat.handlers.chat_handler import handle_choose_product
     await logger.info('Handling back to categories callback')
     await bot.answer_callback_query(callback.id)
 
@@ -109,7 +108,7 @@ async def handle_add_to_cart_callback(callback: CallbackQuery):
     # Update product cards information
     await bot.answer_callback_query(callback.id)
     msg, keyboard = await get_product_card_info_msg(user.user_id, product)
-    await callback.message.edit_caption(caption=msg, parse_mode='html', reply_markup=keyboard)
+    await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
 
 
 @dp.callback_query_handler(lambda query: 'remove_from_cart_data' in query.data)
@@ -138,7 +137,7 @@ async def handle_remove_from_cart_callback(callback: CallbackQuery):
         await callback.message.delete()
     else:
         msg, keyboard = await get_product_card_info_msg(user.user_id, product)
-        await callback.message.edit_caption(caption=msg, parse_mode='html', reply_markup=keyboard)
+        await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
 
 
 @dp.callback_query_handler(lambda query: 'change_amount_data' in query.data)
@@ -168,8 +167,9 @@ async def handle_change_amount_callback(callback: CallbackQuery):
             product_info['total_cost'] = total_cost
     await db.update_user(user)
 
+    await bot.answer_callback_query(callback.id)
     msg, keyboard = await update_cart_msg(callback.message.text, cart_amount, total_cost, product)
-    await callback.message.edit_text(msg, reply_markup=keyboard, parse_mode='html')
+    await callback.message.edit_text(msg, reply_markup=keyboard)
 
 
 @dp.callback_query_handler(lambda query: 'payment_data' in query.data)
@@ -212,7 +212,7 @@ async def handle_payment_callback(callback: CallbackQuery):
             protect_content=True,
         )
     else:
-        await callback.message.answer(await nothing_to_pay(), parse_mode='html')
+        await callback.message.answer(await nothing_to_pay())
 
 @dp.pre_checkout_query_handler()
 async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
@@ -246,7 +246,7 @@ async def successful_payment(message: Message):
     # Insert the order into the database
     order_id = str(uuid4())
     user = await db.get_user_by_id(message.from_user.id)
-    await db.insert_order(Models.Order(
+    await db.insert_order(Order(
         order_id=order_id,
         products_info=user.cart,
         address=address,

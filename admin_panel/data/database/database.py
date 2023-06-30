@@ -15,10 +15,10 @@ class Database:
         while True:
             print('Connecting...')
             try:
-                # self.engine = create_engine(f'postgresql://'
-                #                             f'{cf.DATABASE_USER}:{cf.DATABASE_PASSWORD}'
-                #                             f'@{cf.DATABASE_HOST}:{cf.DATABASE_PORT}')
-                self.engine = create_engine(f"sqlite:///{cf.DATABASE_PATH}")
+                self.engine = create_engine(f'postgresql://'
+                                            f'{cf.DATABASE_USER}:{cf.DATABASE_PASSWORD}'
+                                            f'@{cf.DATABASE_HOST}:{cf.DATABASE_PORT}')
+                # self.engine = create_engine(f"sqlite:///{cf.DATABASE_PATH}")
                 self.session_maker = sessionmaker(bind=self.engine)
                 self.logger = logger
 

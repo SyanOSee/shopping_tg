@@ -8,7 +8,7 @@ from data.database.database import Database
 from utils.logger import Logger
 
 # Telegram Bot
-bot = Bot(cf.BOT_TOKEN)
+bot = Bot(cf.BOT_TOKEN, parse_mode='html')
 
 # Dispatcher
 dp = Dispatcher(
@@ -19,7 +19,7 @@ dp = Dispatcher(
 
 # anti-spam function
 async def anti_spam(*args, **kwargs):
-    await args[0].answer('<b>Спам запрещен!</b>', parse_mode='html')
+    await args[0].answer('<b>Спам запрещен!</b>')
 
 # Logging object
 logger = Logger(cf.LOGGING_PATH)
