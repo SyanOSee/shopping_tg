@@ -48,10 +48,11 @@ async def handle_cart(message: Message):
     user = await db.get_user_by_id(message.from_user.id)
     if user.cart:
         for category in await db.get_categories():
-            for product_info in user.cart[category]:
-                product = await db.get_product_by_id(product_info['product_id'])
-                msg, keyboard = await cart_msg(category, product_info, product)
-                await message.answer(msg, reply_markup=keyboard)
+            if category in user.cart:
+                for product_info in user.cart[category]:
+                    product = await db.get_product_by_id(product_info['product_id'])
+                    msg, keyboard = await cart_msg(category, product_info, product)
+                    await message.answer(msg, reply_markup=keyboard)
     else:
         await message.answer(await empty_cart_msg())
 

@@ -181,9 +181,10 @@ async def handle_payment_callback(callback: CallbackQuery):
     prices = []
     for cat, cat_products in user.cart.items():
         for product in cat_products:
-            prices.append(LabeledPrice(f'{product["name"]} x{product["amount"]}', product["total_cost"] * 100))
+            prices.append(LabeledPrice(f'{product["name"]} x{product["amount"]}', int(product["total_cost"] * 100)))
 
     # Send the invoice to the user
+    await logging
     title, description = await invoice_msg()
     if prices:
         await bot.send_invoice(
