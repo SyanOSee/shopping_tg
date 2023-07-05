@@ -6,10 +6,6 @@ from utils.str_resources import *
 from data.database.models import Order
 from init_loader import dp, db, cf, bot, logger
 
-# Dictionary to store message IDs of product cards sent for each user
-user_msg_id_sent_products = defaultdict(list)
-
-
 async def __process_callback_data(callback_data) -> str | tuple:
     """
     Process callback data by removing unnecessary characters and returning object or tuple.
@@ -49,9 +45,6 @@ async def handle_category_callback(callback: CallbackQuery):
             reply_markup=keyboard
         )
 
-        # Store the message ID for later deletion
-        user_msg_id_sent_products[str(callback.from_user.id)].append(message)
-
     # Send a message with an option to go back to the catalog
     msg, keyboard = await back_to_catalogue_msg()
     await bot.send_message(
@@ -71,14 +64,7 @@ async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     await logger.info('Handling back to categories callback')
     await bot.answer_callback_query(callback.id)
 
-    # Delete previously sent messages
-    for msg_id in user_msg_id_sent_products[str(callback.from_user.id)]:
-        await bot.delete_message(
-            chat_id=callback.message.chat.id,
-            message_id=int(msg_id)
-        )
     await callback.message.delete()
-    user_msg_id_sent_products[str(callback.from_user.id)] = []
 
     # Invoke the handler to choose a product
     await handle_choose_product(callback.message)
