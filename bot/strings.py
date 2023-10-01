@@ -1,4 +1,4 @@
-from chat.keyboards.inline_keyboards import *
+from bot.inline_keyboards import *
 
 
 def about_name() -> str:
