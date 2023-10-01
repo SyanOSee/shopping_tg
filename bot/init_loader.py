@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import config as cf
-from data.database.database import Database
+from database.database import Database
 from utils.logger import Logger
 
 # Telegram Bot

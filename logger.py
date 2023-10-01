@@ -1,5 +1,6 @@
 import logging as log
 
+
 class Logger:
     def __init__(self, logging_path: str = ""):
         self.__logging_path = logging_path
@@ -11,35 +12,32 @@ class Logger:
         )
 
     @staticmethod
-    async def __show_in_console(msg: str):
+    def __show_in_console(msg: str):
         print(msg)
 
-    async def get_logging_path(self) -> str:
-        return self.__logging_path
-
-    async def read_log_file(self) -> str:
+    def read_log_file(self) -> str:
         if self.__logging_path:
             with open(self.__logging_path, "r") as f:
                 return f.read()
         return ""
 
-    async def clear_log_file(self):
+    def clear_log_file(self):
         if self.__logging_path:
             with open(self.__logging_path, "w") as f:
                 f.write("")
         return ""
 
     @staticmethod
-    async def info(msg: str):
-        await Logger.__show_in_console(msg)
+    def info(msg: str):
+        Logger.__show_in_console(msg)
         log.info(msg=msg)
 
     @staticmethod
-    async def warning(msg: str):
-        await Logger.__show_in_console(msg)
+    def warning(msg: str):
+        Logger.__show_in_console(msg)
         log.warning(msg=msg)
 
     @staticmethod
-    async def error(msg: str):
-        await Logger.__show_in_console(msg)
+    def error(msg: str):
+        Logger.__show_in_console(msg)
         log.error(msg=msg)
