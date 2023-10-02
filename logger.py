@@ -15,12 +15,6 @@ class Logger:
     def __show_in_console(msg: str):
         print(msg)
 
-    def read_log_file(self) -> str:
-        if self.__logging_path:
-            with open(self.__logging_path, "r") as f:
-                return f.read()
-        return ""
-
     def clear_log_file(self):
         if self.__logging_path:
             with open(self.__logging_path, "w") as f:

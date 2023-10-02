@@ -11,7 +11,7 @@ import traceback
 # Project
 import config as cf
 from logger import Logger
-from models import User, Product, Order, base
+from database.models import User, Product, Order, base
 
 
 # Enum for different types of database connections
@@ -34,16 +34,16 @@ class Database:
                 base.metadata.create_all(self.engine)
 
                 # Initializing instances for User, Product, and Order operations
-                self.user = self.User(session_maker=sessionmaker, logger=logger)
-                self.product = self.Product(session_maker=sessionmaker, logger=logger)
-                self.order = self.Order(session_maker=sessionmaker, logger=logger)
+                self.user = self.User(session_maker=self.session_maker, logger=logger)
+                self.product = self.Product(session_maker=self.session_maker, logger=logger)
+                self.order = self.Order(session_maker=self.session_maker, logger=logger)
 
                 self.logger.info('Connected to database')
                 break
             except sqlalchemy.exc.OperationalError:
                 # Handling database connection errors
                 self.logger.error('Database error:\n' + traceback.format_exc())
-                sleep(secs=5)
+                sleep(5.0)
 
     # Constructor to initialize the Database class
     def __init__(self, type_: Type, logger: Logger):
@@ -61,11 +61,11 @@ class Database:
             session = self.session_maker()
             db_user = await self.get_by_id(user.user_id)
             if db_user:
-                await self.logger.info(f'User {user.user_id} is already in database')
+                self.logger .info(f'User {user.user_id} is already in database')
             else:
                 session.add(user)
                 session.commit()
-                await self.logger.info(f'User {user.user_id} is added to database')
+                self.logger .info(f'User {user.user_id} is added to database')
             session.close()
 
         # Delete a user from the database
@@ -73,7 +73,7 @@ class Database:
             session = self.session_maker()
             session.query(User).filter_by(user_id=user.user_id).delete()
             session.commit()
-            await self.logger.warning(f'User {user.user_id} is deleted from database')
+            self.logger .warning(f'User {user.user_id} is deleted from database')
             session.close()
 
         # Get a user by their ID
@@ -81,11 +81,11 @@ class Database:
             session = self.session_maker()
             data = session.query(User).filter(User.user_id == user_id).first()
             if data:
-                await self.logger.info(f'User {user_id} is retrieved from database')
+                self.logger .info(f'User {user_id} is retrieved from database')
                 session.close()
                 return data
             else:
-                await self.logger.warning(f'User {user_id} is not in database')
+                self.logger .warning(f'User {user_id} is not in database')
                 session.close()
                 return None
 
@@ -98,7 +98,7 @@ class Database:
                 'order_ids': user.order_ids
             })
             session.commit()
-            await self.logger.info(f'User {user.user_id} is updated')
+            self.logger .info(f'User {user.user_id} is updated')
             session.close()
 
     # Class for Product operations
@@ -122,11 +122,11 @@ class Database:
             session = self.session_maker()
             db_product = await self.get_by_id(product.product_id)
             if db_product:
-                await self.logger.info(f"Product {product.product_id} is already in database")
+                self.logger .info(f"Product {product.product_id} is already in database")
             else:
                 session.add(product)
                 session.commit()
-                await self.logger.info(f"Product {product.product_id} is added to database")
+                self.logger .info(f"Product {product.product_id} is added to database")
             session.close()
 
         # Delete a product from the database
@@ -134,7 +134,7 @@ class Database:
             session = self.session_maker()
             session.query(Product).filter_by(product_id=product.product_id).delete()
             session.commit()
-            await self.logger.warning(f"Product {product.product_id} is deleted")
+            self.logger .warning(f"Product {product.product_id} is deleted")
             session.close()
 
         # Get a product by its ID
@@ -143,10 +143,10 @@ class Database:
             data = session.query(Product).filter(Product.product_id == product_id).first()
             session.close()
             if data:
-                await self.logger.info(f"Product {product_id} is retrieved from database")
+                self.logger .info(f"Product {product_id} is retrieved from database")
                 return data
             else:
-                await self.logger.warning(f"Product {product_id} is not in database")
+                self.logger .warning(f"Product {product_id} is not in database")
                 return None
 
         # Get products by category
@@ -155,10 +155,10 @@ class Database:
             data = session.query(Product).filter(Product.category == category).all()
             session.close()
             if data:
-                await self.logger.info(f'Fetched products by category: {category}')
+                self.logger .info(f'Fetched products by category: {category}')
                 return data
             else:
-                await self.logger.info(f'There are no products with category: {category}')
+                self.logger .info(f'There are no products with category: {category}')
 
         # Fetch all product categories
         async def fetch_categories(self) -> list | None:
@@ -166,10 +166,10 @@ class Database:
             data = session.query(Product).all()
             session.close()
             if data:
-                await self.logger.info('Categories is retrieved')
+                self.logger .info('Categories is retrieved')
                 return sorted(list(set([product.category for product in data])), key=lambda x: x[0])
             else:
-                await self.logger.warning('There are no categories')
+                self.logger .warning('There are no categories')
                 return None
 
         # Update product information
@@ -185,7 +185,7 @@ class Database:
                 'discount': product.discount
             })
             session.commit()
-            await self.logger.info(f'Product {product.product_id} is updated')
+            self.logger .info(f'Product {product.product_id} is updated')
             session.close()
 
     # Class for Order operations
@@ -199,7 +199,7 @@ class Database:
             session = self.session_maker()
             session.add(order)
             session.commit()
-            await self.logger.info(f'Order {order.order_id} inserted in database')
+            self.logger .info(f'Order {order.order_id} inserted in database')
             session.close()
 
         # Delete an order from the database
@@ -207,7 +207,7 @@ class Database:
             session = self.session_maker()
             session.query(Order).filter_by(order_id=order.order_id).delete()
             session.commit()
-            await self.logger.warning(f"Order {order.order_id} is deleted")
+            self.logger .warning(f"Order {order.order_id} is deleted")
             session.close()
 
         # Get an order by its ID
@@ -215,10 +215,10 @@ class Database:
             session = self.session_maker()
             data = session.query(Order).filter_by(order_id=order_id).first()
             if data:
-                await self.logger.info(f'Order {order_id} is retrieved from database')
+                self.logger .info(f'Order {order_id} is retrieved from database')
                 session.close()
                 return data
             else:
-                await self.logger.warning(f'Order {order_id} not in database')
+                self.logger .warning(f'Order {order_id} not in database')
                 session.close()
                 return None

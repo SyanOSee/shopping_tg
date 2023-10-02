@@ -10,12 +10,14 @@ from logger import Logger
 
 
 class TelegramBot:
-    def __init__(self, logger: Logger, routers):
+    def __init__(self, logger: Logger):
         self.logger = logger
         self.bot = Bot(cf.bot['token'])
         self.dispatcher = Dispatcher(bot=self.bot, loop=asyncio.get_event_loop())
-        self.dispatcher.include_routers(routers)
         self.logger.info('Bot is created')
+
+    def set_router(self, router):
+        self.dispatcher.include_router(router)
 
     async def __on_startup(self):
         self.logger.warning("Bot is started")

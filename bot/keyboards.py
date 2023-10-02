@@ -2,15 +2,15 @@
 from aiogram.utils.keyboard import *
 
 # Project
-import strings
+import bot.strings as strings
 from database.models import Product
 from bot.callbacks import *
 
-menu_buttons = [[
-    KeyboardButton(text=strings.ru['about_name']), KeyboardButton(text=strings.ru['faq_name']),
-    KeyboardButton(text=strings.ru['cart_name']), KeyboardButton(text=strings.ru['choose_product_name']),
-    KeyboardButton(text=strings.ru['payment_name'])
-]]
+menu_buttons = [
+    [KeyboardButton(text=strings.ru['about_name']), KeyboardButton(text=strings.ru['faq_name'])],
+    [KeyboardButton(text=strings.ru['cart_name']), KeyboardButton(text=strings.ru['choose_product_name'])],
+    [KeyboardButton(text=strings.ru['payment_name'])]
+]
 menu_keyboard = ReplyKeyboardMarkup(keyboard=menu_buttons, resize_keyboard=True, row_width=2)
 
 

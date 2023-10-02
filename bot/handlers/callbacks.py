@@ -1,5 +1,5 @@
 # Third-party
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import *
 
 # Project
@@ -10,19 +10,19 @@ import config as cf
 from bot.callbacks import *
 from bot.handlers.commands import handle_choose_product
 from database.models import Order
-from start import bot, logger, database
+from modules import bot, logger, database
 
-callback_router = Router()
+router = Router()
 
 
-@callback_router.callback_query(CategoryCallback.filter())
+@router.callback_query(CategoryCallback.filter())
 async def handle_category_callback(callback: CallbackQuery, callback_data: CategoryCallback):
     """
     Callback handler for category selection.
     Retrieves products by category, generates and sends product cards,
     and provides an option to go back to the catalog.
     """
-    await logger.info('Handling category callback')
+    logger.info('Handling category callback')
     await bot.answer_callback_query(callback.id)
     await callback.message.delete()
 
@@ -30,7 +30,8 @@ async def handle_category_callback(callback: CallbackQuery, callback_data: Categ
         # Retrieve message and reply markup for the product card
         msg, keyboard = await strings.ru['get_product_card_info_msg'](
             user_id=callback.from_user.id,
-            product=product
+            product=product,
+            database=database
         )
         # Send the product card photo message
         await bot.send_photo(
@@ -48,13 +49,13 @@ async def handle_category_callback(callback: CallbackQuery, callback_data: Categ
     )
 
 
-@callback_router.callback_query(BackToCatalogueCallback.filter())
+@router.callback_query(BackToCatalogueCallback.filter())
 async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     """
     Callback handler for going back to catalogue.
     Deletes previously sent messages and invokes the handler to choose a product.
     """
-    await logger.info('Handling back to categories callback')
+    logger.info('Handling back to categories callback')
     await bot.answer_callback_query(callback.id)
 
     await callback.message.delete()
@@ -63,12 +64,12 @@ async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     await handle_choose_product(callback.message)
 
 
-@callback_router.callback_query(AddToCartCallback.filter())
+@router.callback_query(AddToCartCallback.filter())
 async def handle_add_to_cart_callback(callback: CallbackQuery, callback_data: AddToCartCallback):
     """
     Callback handler for adding a product to the cart.
     """
-    await logger.info('Handling add to cart data callback')
+    logger.info('Handling add to cart data callback')
     product_id = callback_data.product_id
     product = await database.product.get_by_id(product_id)
     user = await database.user.get_by_id(callback.from_user.id)
@@ -90,12 +91,12 @@ async def handle_add_to_cart_callback(callback: CallbackQuery, callback_data: Ad
     await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
 
 
-@callback_router.callback_query(RemoveFromCartCallback.filter())
+@router.callback_query(RemoveFromCartCallback.filter())
 async def handle_remove_from_cart_callback(callback: CallbackQuery, callback_data: RemoveFromCartCallback):
     """
     Callback handler for removing a product from the cart.
     """
-    await logger.info('Handling remove from cart callback')
+    logger.info('Handling remove from cart callback')
     product_id = callback_data.product_id
     in_cart = callback_data.in_cart
     product, user = await database.product.get_by_id(product_id), await database.user.get_by_id(callback.from_user.id)
@@ -119,12 +120,12 @@ async def handle_remove_from_cart_callback(callback: CallbackQuery, callback_dat
         await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
 
 
-@callback_router.callback_query(ChangeAmountCallback.filter())
+@router.callback_query(ChangeAmountCallback.filter())
 async def handle_change_amount_callback(callback: CallbackQuery, callback_data: ChangeAmountCallback):
     """
     Callback handler for changing the amount of a product in the cart.
     """
-    await logger.info('Handling change amount callback')
+    logger.info('Handling change amount callback')
     product_id = callback_data.product_id
     category = callback_data.category
     cart_amount = callback_data.cart_amount
@@ -152,19 +153,17 @@ async def handle_change_amount_callback(callback: CallbackQuery, callback_data: 
     await callback.message.edit_text(msg, reply_markup=keyboard)
 
 
-@callback_router.callback_query(PaymentCallback.filter())
+@router.callback_query(PaymentCallback.filter())
 async def handle_payment_callback(callback: CallbackQuery, callback_data: PaymentCallback):
     """
     Callback handler for processing payment.
     """
-    await logger.info('Handling payment callback')
+    logger.info('Handling payment callback')
     await bot.answer_callback_query(callback.id)
 
     # Match the payment provider and assign the corresponding provider token
     provider = callback_data.provider
     match provider:
-        case 'Sberbank':
-            provider_token = cf.payment['sber']
         case 'UKassa':
             provider_token = cf.payment['ukassa']
         case _:
@@ -198,16 +197,16 @@ async def handle_payment_callback(callback: CallbackQuery, callback_data: Paymen
         await callback.message.answer(strings.ru['nothing_to_pay'])
 
 
-@callback_router.pre_checkout_query()
+@router.pre_checkout_query()
 async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
     """
     Handler for processing pre-checkout queries.
     """
-    await logger.info('Pre-checkout')
+    logger.info('Pre-checkout')
     await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
 
 
-@callback_router.message(content_types=ContentType.SUCCESSFUL_PAYMENT)
+@router.message(F.SUCCESSFUL_PAYMENT)
 async def successful_payment(message: Message):
     """
     Handler for successful payment.
@@ -215,7 +214,7 @@ async def successful_payment(message: Message):
     from uuid import uuid4
     from datetime import datetime
 
-    await logger.info('Payment is successful')
+    logger.info('Payment is successful')
 
     # Extract payment information from the message
     payment_info = message.successful_payment.to_python()

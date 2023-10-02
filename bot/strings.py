@@ -1,9 +1,10 @@
 # Project
-from keyboards import *
-from start import database
+from bot.keyboards import *
+from database.database import Database
+from database.models import Product
 
 
-async def get_product_card_info_msg(user_id: int, product: Product) -> (str, InlineKeyboardMarkup):
+async def get_product_card_info_msg(user_id: int, product: Product, database: Database) -> (str, InlineKeyboardMarkup):
     message = f'<b>{product.name}</b>\n\n' \
               f'<b>Описание:</b>\n{product.description}\n\n' \
               f'<b>Количество на складе:</b> {product.amount} шт.\n\n' \

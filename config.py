@@ -19,7 +19,6 @@ bot = {
 }
 
 payment = {
-    'sber': os.getenv('SBERBANK'),
     'ukassa': os.getenv('UKASSA')
 }
 
