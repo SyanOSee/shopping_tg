@@ -1,28 +1,22 @@
 # Third-party
+from aiogram import Router
 from aiogram.types import *
 
 # Project
-import strings
+import bot.keyboards as kb
+import bot.strings
+import bot.strings as strings
 import config as cf
+from bot.callbacks import *
+from bot.handlers.commands import handle_choose_product
 from database.models import Order
-from commands import handle_choose_product
-from start import *
+from start import bot, logger, database
+
+callback_router = Router()
 
 
-async def __process_callback_data(callback_data) -> str | tuple:
-    """
-    Process callback data by removing unnecessary characters and returning object or tuple.
-    """
-    result = callback_data.replace('data:', '').replace('[', '').replace(']', '').replace("'", '').split(', ')
-    result[0] = result[0].split('_')[-1]
-    if len(result) == 1:
-        return result[0]
-    else:
-        return tuple(result)
-
-
-@bot.dispatcher.callback_query_handler(lambda query: 'category_data' in query.data)
-async def handle_category_callback(callback: CallbackQuery):
+@callback_router.callback_query(CategoryCallback.filter())
+async def handle_category_callback(callback: CallbackQuery, callback_data: CategoryCallback):
     """
     Callback handler for category selection.
     Retrieves products by category, generates and sends product cards,
@@ -32,10 +26,9 @@ async def handle_category_callback(callback: CallbackQuery):
     await bot.answer_callback_query(callback.id)
     await callback.message.delete()
 
-    category = await __process_callback_data(callback.data)
-    for product in await database.product.get_by_category(category):
+    for product in await database.product.get_by_category(callback_data.category):
         # Retrieve message and reply markup for the product card
-        msg, keyboard = await strings.Ru.get_product_card_info_msg(
+        msg, keyboard = await strings.ru['get_product_card_info_msg'](
             user_id=callback.from_user.id,
             product=product
         )
@@ -48,15 +41,14 @@ async def handle_category_callback(callback: CallbackQuery):
         )
 
     # Send a message with an option to go back to the catalog
-    msg, keyboard = strings.Ru.back_to_catalogue_msg()
     await bot.send_message(
         chat_id=callback.message.chat.id,
-        text=msg,
-        reply_markup=keyboard
+        text=strings.ru['back_to_catalogue_msg'],
+        reply_markup=await kb.get_back_to_categories_keyboard()
     )
 
 
-@bot.dispatcher.callback_query_handler(lambda query: 'back_to_catalogue_data' in query.data)
+@callback_router.callback_query(BackToCatalogueCallback.filter())
 async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     """
     Callback handler for going back to catalogue.
@@ -71,13 +63,13 @@ async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     await handle_choose_product(callback.message)
 
 
-@bot.dispatcher.callback_query_handler(lambda query: 'add_to_cart_data' in query.data)
-async def handle_add_to_cart_callback(callback: CallbackQuery):
+@callback_router.callback_query(AddToCartCallback.filter())
+async def handle_add_to_cart_callback(callback: CallbackQuery, callback_data: AddToCartCallback):
     """
     Callback handler for adding a product to the cart.
     """
     await logger.info('Handling add to cart data callback')
-    product_id = int(await __process_callback_data(callback.data))
+    product_id = callback_data.product_id
     product = await database.product.get_by_id(product_id)
     user = await database.user.get_by_id(callback.from_user.id)
 
@@ -94,18 +86,18 @@ async def handle_add_to_cart_callback(callback: CallbackQuery):
 
     # Update product cards information
     await bot.answer_callback_query(callback.id)
-    msg, keyboard = await strings.Ru.get_product_card_info_msg(user.user_id, product)
+    msg, keyboard = await strings.ru['get_product_card_info_msg'](user.user_id, product)
     await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
 
 
-@bot.dispatcher.callback_query_handler(lambda query: 'remove_from_cart_data' in query.data)
-async def handle_remove_from_cart_callback(callback: CallbackQuery):
+@callback_router.callback_query(RemoveFromCartCallback.filter())
+async def handle_remove_from_cart_callback(callback: CallbackQuery, callback_data: RemoveFromCartCallback):
     """
     Callback handler for removing a product from the cart.
     """
     await logger.info('Handling remove from cart callback')
-    product_id, in_cart = await __process_callback_data(callback.data)
-    product_id, in_cart = int(product_id), True if in_cart == 'True' else False
+    product_id = callback_data.product_id
+    in_cart = callback_data.in_cart
     product, user = await database.product.get_by_id(product_id), await database.user.get_by_id(callback.from_user.id)
 
     # Remove the product from the user's cart
@@ -123,19 +115,20 @@ async def handle_remove_from_cart_callback(callback: CallbackQuery):
     if in_cart:
         await callback.message.delete()
     else:
-        msg, keyboard = await strings.Ru.get_product_card_info_msg(user.user_id, product)
+        msg, keyboard = await strings.ru['get_product_card_info_msg'](user.user_id, product)
         await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
 
 
-@bot.dispatcher.callback_query_handler(lambda query: 'change_amount_data' in query.data)
-async def handle_change_amount_callback(callback: CallbackQuery):
+@callback_router.callback_query(ChangeAmountCallback.filter())
+async def handle_change_amount_callback(callback: CallbackQuery, callback_data: ChangeAmountCallback):
     """
     Callback handler for changing the amount of a product in the cart.
     """
     await logger.info('Handling change amount callback')
-    product_id, category, cart_amount, is_adding = await __process_callback_data(callback.data)
-    product_id, category, cart_amount = int(product_id), category, int(cart_amount)
-    is_adding = True if is_adding == 'True' else False
+    product_id = callback_data.product_id
+    category = callback_data.category
+    cart_amount = callback_data.cart_amount
+    is_adding = callback_data.is_adding
 
     product = await database.product.get_by_id(product_id)
     user = await database.user.get_by_id(callback.from_user.id)
@@ -155,12 +148,12 @@ async def handle_change_amount_callback(callback: CallbackQuery):
     await database.user.update(user)
 
     await bot.answer_callback_query(callback.id)
-    msg, keyboard = await strings.Ru.update_cart_msg(callback.message.text, cart_amount, total_cost, product)
+    msg, keyboard = await strings.ru['update_cart_msg'](callback.message.text, cart_amount, total_cost, product)
     await callback.message.edit_text(msg, reply_markup=keyboard)
 
 
-@bot.dispatcher.callback_query_handler(lambda query: 'payment_data' in query.data)
-async def handle_payment_callback(callback: CallbackQuery):
+@callback_router.callback_query(PaymentCallback.filter())
+async def handle_payment_callback(callback: CallbackQuery, callback_data: PaymentCallback):
     """
     Callback handler for processing payment.
     """
@@ -168,7 +161,7 @@ async def handle_payment_callback(callback: CallbackQuery):
     await bot.answer_callback_query(callback.id)
 
     # Match the payment provider and assign the corresponding provider token
-    provider = await __process_callback_data(callback.data)
+    provider = callback_data.provider
     match provider:
         case 'Sberbank':
             provider_token = cf.payment['sber']
@@ -182,10 +175,13 @@ async def handle_payment_callback(callback: CallbackQuery):
     prices = []
     for cat, cat_products in user.cart.items():
         for product in cat_products:
-            prices.append(LabeledPrice(f'{product["name"]} x{product["amount"]}', int(product["total_cost"] * 100)))
+            prices.append(LabeledPrice(
+                label=f'{product["name"]} x{product["amount"]}',
+                amount=int(product["total_cost"] * 100))
+            )
 
     # Send the invoice to the user
-    title, description = strings.Ru.invoice_msg()
+    title, description = strings.ru['invoice_msg']
     if prices:
         await bot.send_invoice(
             chat_id=callback.message.chat.id,
@@ -199,10 +195,10 @@ async def handle_payment_callback(callback: CallbackQuery):
             protect_content=True,
         )
     else:
-        await callback.message.answer(strings.Ru.nothing_to_pay())
+        await callback.message.answer(strings.ru['nothing_to_pay'])
 
 
-@bot.dispatcher.pre_checkout_query_handler()
+@callback_router.pre_checkout_query()
 async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
     """
     Handler for processing pre-checkout queries.
@@ -211,7 +207,7 @@ async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
     await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
 
 
-@bot.dispatcher.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT)
+@callback_router.message(content_types=ContentType.SUCCESSFUL_PAYMENT)
 async def successful_payment(message: Message):
     """
     Handler for successful payment.
@@ -254,7 +250,7 @@ async def successful_payment(message: Message):
     await database.user.update(user)
 
     # Send the success message
-    await bot.send_message(message.chat.id, strings.Ru.successful_payment_msg(
+    await bot.send_message(message.chat.id, strings.ru['successful_payment_msg'](
         total_price=message.successful_payment.total_amount // 100,
         currency=message.successful_payment.currency
     ))

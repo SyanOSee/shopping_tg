@@ -1,14 +1,18 @@
 # Third-party
-from aiogram.types import *
+from aiogram import Router, F
+from aiogram.types import Message
+from aiogram.filters import Command
 
 # Project
-import keyboards as kb
-import strings
+import bot.keyboards as kb
+import bot.strings as strings
 from database.models import User
 from start import *
 
+commands_router = Router()
 
-@bot.dispatcher.message_handler(commands=['start'])
+
+@commands_router.message(Command('start'))
 async def start(message: Message):
     """
     Handler for the '/start' command.
@@ -19,7 +23,7 @@ async def start(message: Message):
     await database.user.insert_if_not_exist(User().init_values(message.from_user.id))
 
 
-@bot.dispatcher.message_handler(content_types=['text'])
+@commands_router.message(F.text)
 async def menu_keyboard_handler(message: Message):
     """
     Handler for processing text messages based on the menu keyboard options.
