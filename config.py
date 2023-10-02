@@ -14,7 +14,7 @@ project = {
 }
 
 bot = {
-    'token': os.getenv('BOT_TOKEN'),  # Telegram bot token
+    'token': os.getenv('BOT_TOKEN'),  # Telegram tg_bot token
     'spam_rate': 1  # Spamming interval in seconds
 }
 

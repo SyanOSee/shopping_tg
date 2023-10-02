@@ -16,16 +16,9 @@ class TelegramBot:
         self.dispatcher = Dispatcher(bot=self.bot, loop=asyncio.get_event_loop())
         self.logger.info('Bot is created')
 
-    def set_router(self, router):
-        self.dispatcher.include_router(router)
-
-    async def __on_startup(self):
-        self.logger.warning("Bot is started")
-        self.logger.clear_log_file()
-
-    async def __on_shutdown(self):
-        self.logger.warning("Bot is stopped")
-        await self.dispatcher.storage.close()
+    def set_routers(self, routers):
+        [self.dispatcher.include_router(router) for router in routers]
 
     async def start(self):
+        self.logger.clear_log_file()
         await self.dispatcher.start_polling(self.bot)

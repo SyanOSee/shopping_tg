@@ -1,49 +1,35 @@
 # Project
-from bot.keyboards import *
-from database.database import Database
+from database.db import Database
 from database.models import Product
 
 
-async def get_product_card_info_msg(user_id: int, product: Product, database: Database) -> (str, InlineKeyboardMarkup):
+async def get_product_card_info_msg(user_id: int, product: Product, database: Database) -> (str, bool):
     message = f'<b>{product.name}</b>\n\n' \
               f'<b>Описание:</b>\n{product.description}\n\n' \
               f'<b>Количество на складе:</b> {product.amount} шт.\n\n' \
               f'<b>Цена с учетом скидки {product.discount}%</b>: {round(product.cost * ((100 - product.discount) / 100))} руб.'
-    keyboard = await get_add_to_cart_keyboard(product)
-    if await database.product.check_in_user_cart(user_i=user_id, product=product):
+    should_use_add_to_cart_keyboard = True
+    if await database.product.check_in_user_cart(user_id=user_id, product=product):
         message += '\n\n<b>Добавлено в корзину</b>'
-        keyboard = await get_remove_from_cart_keyboard(product, False)
+        should_use_add_to_cart_keyboard = False
 
-    return message, keyboard
+    return message, should_use_add_to_cart_keyboard
 
 
-async def cart_msg(category: str, product_info: dict, product: Product) -> (str, InlineKeyboardMarkup):
+async def cart_msg(category: str, product_info: dict, product: Product) -> str:
     total_cost = round(product_info["amount"] * product.cost * ((100 - product.discount) / 100))
     msg = f'Категория: {category}\n' \
           f'Название: {product_info["name"]}\n' \
           f'Количество: {product_info["amount"]} шт. (max: {product.amount})\n' \
           f'Итоговая стоимость со скидкой {product.discount}%: {total_cost} руб.'
-    keyboard = await get_cart_options_keyboard(
-        product_id=product.product_id,
-        category=category,
-        cart_amount=product_info['amount'],
-        in_cart=True
-    )
-    return msg, keyboard
+    return msg
 
 
-async def update_cart_msg(init_msg: str, cart_amount: int, total_cost: float, product: Product) -> (
-        str, InlineKeyboardMarkup):
+async def update_cart_msg(init_msg: str, cart_amount: int, total_cost: float, product: Product) -> str:
     msg = init_msg.split('\n')
     msg[2] = f'Количество: {cart_amount} шт. (max: {product.amount})'
     msg[3] = f'Итоговая стоимость со скидкой {product.discount}%: {total_cost} руб.'
-    keyboard = await get_cart_options_keyboard(
-        product_id=product.product_id,
-        category=product.category,
-        cart_amount=cart_amount,
-        in_cart=True
-    )
-    return '\n'.join(msg), keyboard
+    return '\n'.join(msg)
 
 
 def successful_payment_msg(total_price: float, currency: str) -> str:
@@ -57,8 +43,8 @@ ru = {
     'choose_product_name': '🛏 Выбрать мебель',
     'payment_name': '💸 Оплата',
     'go_back_name': 'Вернуться назад',
-    'add_to_cart_name': 'Добавить в корзину',
-    'remove_from_cart_name': 'Убрать из корзину',
+    'add_to_cart_name': 'Добавить',
+    'remove_from_cart_name': 'Убрать',
     'do_not_spam': 'Не спамить!',
     'greeting_msg': '<b>Приветствую в нашем магазине мебели!</b>',
     'about_msg': '<b>О нас</b>\n'

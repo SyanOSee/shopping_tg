@@ -26,8 +26,8 @@ services:
       - "5000:${SERVER_PORT}"
 
   bot:
-    build: bot/.
-    container_name: bot
+    build: tg_bot/.
+    container_name: tg_bot
     restart: always
     depends_on:
       - postgres_database

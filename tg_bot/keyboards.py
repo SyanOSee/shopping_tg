@@ -2,9 +2,9 @@
 from aiogram.utils.keyboard import *
 
 # Project
-import bot.strings as strings
+import tg_bot.strings as strings
 from database.models import Product
-from bot.callbacks import *
+from tg_bot.callbacks import *
 
 menu_buttons = [
     [KeyboardButton(text=strings.ru['about_name']), KeyboardButton(text=strings.ru['faq_name'])],
@@ -36,7 +36,7 @@ async def get_back_to_categories_keyboard() -> InlineKeyboardMarkup:
 
 async def get_add_to_cart_keyboard(product: Product) -> InlineKeyboardMarkup:
     """Generates an inline keyboard markup with an "Add to Cart" button"""
-    return InlineKeyboardBuilder.button(
+    return InlineKeyboardBuilder().button(
         text=strings.ru['add_to_cart_name'],
         callback_data=AddToCartCallback(product_id=product.product_id)
     ).as_markup()
@@ -44,7 +44,7 @@ async def get_add_to_cart_keyboard(product: Product) -> InlineKeyboardMarkup:
 
 async def get_remove_from_cart_keyboard(product: Product, in_cart: bool) -> InlineKeyboardMarkup:
     """Generates an inline keyboard markup with a "Remove from Cart" button"""
-    return InlineKeyboardBuilder.button(
+    return InlineKeyboardBuilder().button(
         text=strings.ru['remove_from_cart_name'],
         callback_data=RemoveFromCartCallback(product_id=product.product_id, in_cart=in_cart)
     ).as_markup()
@@ -53,7 +53,7 @@ async def get_remove_from_cart_keyboard(product: Product, in_cart: bool) -> Inli
 async def get_cart_options_keyboard(product_id: int, category: str,
                                     cart_amount: int, in_cart: bool) -> InlineKeyboardMarkup:
     """Generates an inline keyboard markup with cart options buttons"""
-    return InlineKeyboardBuilder.button(
+    return InlineKeyboardBuilder().button(
         text='+',
         callback_data=ChangeAmountCallback(product_id=product_id, category=category,
                                            cart_amount=cart_amount, is_adding=True)
@@ -70,7 +70,7 @@ async def get_cart_options_keyboard(product_id: int, category: str,
 async def get_payment_keyboard() -> InlineKeyboardMarkup:
     """Generates an inline keyboard markup with payment provider buttons"""
     builder = InlineKeyboardBuilder()
-    for provider in ['Sberbank', 'UKassa']:
+    for provider in ['UKassa']:
         builder.button(
             text=provider,
             callback_data=PaymentCallback(provider=provider)

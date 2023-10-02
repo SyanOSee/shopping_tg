@@ -3,19 +3,20 @@ from aiogram import Router, F
 from aiogram.types import *
 
 # Project
-import bot.keyboards as kb
-import bot.strings
-import bot.strings as strings
+from tg_bot.callbacks import *
+import tg_bot.keyboards as kb
+import tg_bot.strings as strings
+from tg_bot.handlers.commands import handle_choose_product
+from tg_bot.modules import bot, database
+from tg_bot.middleware import *
 import config as cf
-from bot.callbacks import *
-from bot.handlers.commands import handle_choose_product
 from database.models import Order
-from modules import bot, logger, database
 
-router = Router()
+callback_router = Router()
+callback_router.callback_query.middleware(LoggingMiddleware())
 
 
-@router.callback_query(CategoryCallback.filter())
+@callback_router.callback_query(CategoryCallback.filter())
 async def handle_category_callback(callback: CallbackQuery, callback_data: CategoryCallback):
     """
     Callback handler for category selection.
@@ -23,18 +24,22 @@ async def handle_category_callback(callback: CallbackQuery, callback_data: Categ
     and provides an option to go back to the catalog.
     """
     logger.info('Handling category callback')
-    await bot.answer_callback_query(callback.id)
+    await bot.bot.answer_callback_query(callback.id)
     await callback.message.delete()
 
     for product in await database.product.get_by_category(callback_data.category):
         # Retrieve message and reply markup for the product card
-        msg, keyboard = await strings.ru['get_product_card_info_msg'](
+        msg, should_use_add_to_cart_keyboard = await strings.ru['get_product_card_info_msg'](
             user_id=callback.from_user.id,
             product=product,
             database=database
         )
         # Send the product card photo message
-        await bot.send_photo(
+        if should_use_add_to_cart_keyboard:
+            keyboard = await kb.get_add_to_cart_keyboard(product=product)
+        else:
+            keyboard = await kb.get_remove_from_cart_keyboard(product=product, in_cart=False)
+        await bot.bot.send_photo(
             chat_id=callback.message.chat.id,
             photo=product.image_url,
             caption=msg,
@@ -42,21 +47,22 @@ async def handle_category_callback(callback: CallbackQuery, callback_data: Categ
         )
 
     # Send a message with an option to go back to the catalog
-    await bot.send_message(
+    await bot.bot.send_message(
         chat_id=callback.message.chat.id,
         text=strings.ru['back_to_catalogue_msg'],
-        reply_markup=await kb.get_back_to_categories_keyboard()
+        reply_markup=await kb.get_back_to_categories_keyboard(),
+        parse_mode='html'
     )
 
 
-@router.callback_query(BackToCatalogueCallback.filter())
+@callback_router.callback_query(BackToCatalogueCallback.filter())
 async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     """
     Callback handler for going back to catalogue.
     Deletes previously sent messages and invokes the handler to choose a product.
     """
     logger.info('Handling back to categories callback')
-    await bot.answer_callback_query(callback.id)
+    await bot.bot.answer_callback_query(callback.id)
 
     await callback.message.delete()
 
@@ -64,7 +70,7 @@ async def handle_back_to_catalogue_callback(callback: CallbackQuery):
     await handle_choose_product(callback.message)
 
 
-@router.callback_query(AddToCartCallback.filter())
+@callback_router.callback_query(AddToCartCallback.filter())
 async def handle_add_to_cart_callback(callback: CallbackQuery, callback_data: AddToCartCallback):
     """
     Callback handler for adding a product to the cart.
@@ -86,12 +92,20 @@ async def handle_add_to_cart_callback(callback: CallbackQuery, callback_data: Ad
     await database.user.update(user)
 
     # Update product cards information
-    await bot.answer_callback_query(callback.id)
-    msg, keyboard = await strings.ru['get_product_card_info_msg'](user.user_id, product)
-    await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
+    await bot.bot.answer_callback_query(callback.id)
+    msg, should_use_add_to_cart_keyboard = await strings.ru['get_product_card_info_msg'](
+        user_id=user.user_id,
+        product=product,
+        database=database
+    )
+    if should_use_add_to_cart_keyboard:
+        keyboard = await kb.get_add_to_cart_keyboard(product=product)
+    else:
+        keyboard = await kb.get_remove_from_cart_keyboard(product=product, in_cart=False)
+    await callback.message.edit_caption(caption=msg, reply_markup=keyboard, parse_mode='html')
 
 
-@router.callback_query(RemoveFromCartCallback.filter())
+@callback_router.callback_query(RemoveFromCartCallback.filter())
 async def handle_remove_from_cart_callback(callback: CallbackQuery, callback_data: RemoveFromCartCallback):
     """
     Callback handler for removing a product from the cart.
@@ -112,15 +126,23 @@ async def handle_remove_from_cart_callback(callback: CallbackQuery, callback_dat
         del user.cart[product.category]
 
     await database.user.update(user)
-    await bot.answer_callback_query(callback.id)
+    await bot.bot.answer_callback_query(callback.id)
     if in_cart:
         await callback.message.delete()
     else:
-        msg, keyboard = await strings.ru['get_product_card_info_msg'](user.user_id, product)
-        await callback.message.edit_caption(caption=msg, reply_markup=keyboard)
+        msg, should_use_add_to_cart_keyboard = await strings.ru['get_product_card_info_msg'](
+            user_id=user.user_id,
+            product=product,
+            database=database
+        )
+        if should_use_add_to_cart_keyboard:
+            keyboard = await kb.get_add_to_cart_keyboard(product=product)
+        else:
+            keyboard = await kb.get_remove_from_cart_keyboard(product=product, in_cart=False)
+        await callback.message.edit_caption(caption=msg, reply_markup=keyboard, parse_mode='html')
 
 
-@router.callback_query(ChangeAmountCallback.filter())
+@callback_router.callback_query(ChangeAmountCallback.filter())
 async def handle_change_amount_callback(callback: CallbackQuery, callback_data: ChangeAmountCallback):
     """
     Callback handler for changing the amount of a product in the cart.
@@ -148,18 +170,23 @@ async def handle_change_amount_callback(callback: CallbackQuery, callback_data: 
             product_info['total_cost'] = total_cost
     await database.user.update(user)
 
-    await bot.answer_callback_query(callback.id)
-    msg, keyboard = await strings.ru['update_cart_msg'](callback.message.text, cart_amount, total_cost, product)
-    await callback.message.edit_text(msg, reply_markup=keyboard)
+    await bot.bot.answer_callback_query(callback.id)
+    msg = await strings.ru['update_cart_msg'](callback.message.text, cart_amount, total_cost, product)
+    await callback.message.edit_text(msg, reply_markup=await kb.get_cart_options_keyboard(
+        product_id=product.product_id,
+        category=product.category,
+        cart_amount=cart_amount,
+        in_cart=True,
+    ), parse_mode='html')
 
 
-@router.callback_query(PaymentCallback.filter())
+@callback_router.callback_query(PaymentCallback.filter())
 async def handle_payment_callback(callback: CallbackQuery, callback_data: PaymentCallback):
     """
     Callback handler for processing payment.
     """
     logger.info('Handling payment callback')
-    await bot.answer_callback_query(callback.id)
+    await bot.bot.answer_callback_query(callback.id)
 
     # Match the payment provider and assign the corresponding provider token
     provider = callback_data.provider
@@ -182,7 +209,7 @@ async def handle_payment_callback(callback: CallbackQuery, callback_data: Paymen
     # Send the invoice to the user
     title, description = strings.ru['invoice_msg']
     if prices:
-        await bot.send_invoice(
+        await bot.bot.send_invoice(
             chat_id=callback.message.chat.id,
             title=title,
             description=description,
@@ -194,19 +221,19 @@ async def handle_payment_callback(callback: CallbackQuery, callback_data: Paymen
             protect_content=True,
         )
     else:
-        await callback.message.answer(strings.ru['nothing_to_pay'])
+        await callback.message.answer(strings.ru['nothing_to_pay'], parse_mode='html')
 
 
-@router.pre_checkout_query()
+@callback_router.pre_checkout_query()
 async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
     """
     Handler for processing pre-checkout queries.
     """
     logger.info('Pre-checkout')
-    await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+    await bot.bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
 
 
-@router.message(F.SUCCESSFUL_PAYMENT)
+@callback_router.message(F.SUCCESSFUL_PAYMENT)
 async def successful_payment(message: Message):
     """
     Handler for successful payment.
@@ -249,7 +276,7 @@ async def successful_payment(message: Message):
     await database.user.update(user)
 
     # Send the success message
-    await bot.send_message(message.chat.id, strings.ru['successful_payment_msg'](
+    await bot.bot.send_message(message.chat.id, strings.ru['successful_payment_msg'](
         total_price=message.successful_payment.total_amount // 100,
         currency=message.successful_payment.currency
-    ))
+    ), parse_mode='html')

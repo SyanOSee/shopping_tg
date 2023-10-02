@@ -3,10 +3,11 @@ from sqladmin import ModelView
 
 # Project
 from logger import Logger
-from database.database import Database, Type
+from database.db import Database, Type
 from database.models import User, Product, Order
+import config as cf
 
-database = Database(Type.LOCAL, logger=Logger())
+database = Database(Type.LOCAL, logger=Logger(logging_path=cf.project['log']))
 
 
 class UserModel(ModelView, model=User):

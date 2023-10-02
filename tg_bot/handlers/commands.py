@@ -4,15 +4,17 @@ from aiogram.types import Message
 from aiogram.filters import Command
 
 # Project
-import bot.keyboards as kb
-import bot.strings as strings
+import tg_bot.keyboards as kb
+import tg_bot.strings as strings
+from tg_bot.modules import database
+from tg_bot.middleware import *
 from database.models import User
-from modules import database
 
-router = Router()
+commands_router = Router()
+commands_router.message.middleware(LoggingMiddleware())
 
 
-@router.message(Command('start'))
+@commands_router.message(Command('start'))
 async def start(message: Message):
     """
     Handler for the '/start' command.
@@ -22,7 +24,7 @@ async def start(message: Message):
     await database.user.insert_if_not_exist(User().init_values(message.from_user.id))
 
 
-@router.message(F.text)
+@commands_router.message(F.text)
 async def menu_keyboard_handler(message: Message):
     """
     Handler for processing text messages based on the menu keyboard options.
@@ -51,9 +53,14 @@ async def handle_cart(message: Message):
             if category in user.cart:
                 for product_info in user.cart[category]:
                     product = await database.product.get_by_id(product_id=product_info['product_id'])
-                    msg, keyboard = await strings.ru['cart_msg'](category=category, product_info=product_info,
-                                                                 product=product)
-                    await message.answer(msg, reply_markup=keyboard, parse_mode='html')
+                    msg = await strings.ru['cart_msg'](category=category, product_info=product_info,
+                                                       product=product)
+                    await message.answer(msg, reply_markup=await kb.get_cart_options_keyboard(
+                        product_id=product.product_id,
+                        category=category,
+                        cart_amount=product_info['amount'],
+                        in_cart=True
+                    ), parse_mode='html')
     else:
         await message.answer(strings.ru['empty_cart_msg'], parse_mode='html')
 
