@@ -5,9 +5,9 @@ from starlette.middleware.sessions import SessionMiddleware
 from sqladmin import Admin
 
 # Project
-import admin_panel.config as cf
-from admin_panel.database import database
-from admin_panel.models import UserModel, ProductModel, OrderModel
+import config as cf
+from database import database
+from models import UserModel, ProductModel, OrderModel
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=cf.server['secret_key'], )

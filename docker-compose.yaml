@@ -1,9 +1,8 @@
 version: '3.8'
 
-# Using for convenient postgresql database start-up
 services:
   postgres_database:
-    container_name: postgres_database_container
+    container_name: postgres
     image: postgres:alpine3.18
     ports:
       - "5432:${DATABASE_PORT}"
@@ -13,3 +12,24 @@ services:
     restart: always
     volumes:
       - ./data/database/volume:/app/database/volume
+
+  admin_panel:
+    build: admin_panel/.
+    container_name: admin_panel
+
+    restart: always
+    depends_on:
+      - postgres_database
+    links:
+      - postgres_database
+    ports:
+      - "5000:${SERVER_PORT}"
+
+  bot:
+    build: tg_bot/.
+    container_name: tg_bot
+    restart: always
+    depends_on:
+      - postgres_database
+    links:
+      - postgres_database

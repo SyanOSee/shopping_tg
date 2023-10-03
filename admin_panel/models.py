@@ -2,12 +2,7 @@
 from sqladmin import ModelView
 
 # Project
-from tg_bot.logger import Logger
-from tg_bot.database.db import Database, Type
-from tg_bot.database.models import User, Product, Order
-from admin_panel import config as cf
-
-database = Database(Type.LOCAL, logger=Logger(logging_path=cf.project['log']))
+from database.models import User, Product, Order
 
 
 class UserModel(ModelView, model=User):
