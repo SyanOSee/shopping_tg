@@ -43,7 +43,8 @@ async def handle_category_callback(callback: CallbackQuery, callback_data: Categ
             chat_id=callback.message.chat.id,
             photo=product.image_url,
             caption=msg,
-            reply_markup=keyboard
+            reply_markup=keyboard,
+            parse_mode='html'
         )
 
     # Send a message with an option to go back to the catalog

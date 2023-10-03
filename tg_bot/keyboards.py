@@ -30,7 +30,7 @@ async def get_back_to_categories_keyboard() -> InlineKeyboardMarkup:
     """Generates an inline keyboard markup with back to category button"""
     return InlineKeyboardBuilder().button(
         text=strings.ru['go_back_name'],
-        callback_data=BackToCatalogueCallback()
+        callback_data=BackToCatalogueCallback(blank_='')
     ).as_markup()
 
 

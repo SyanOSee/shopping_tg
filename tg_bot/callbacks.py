@@ -7,7 +7,7 @@ class CategoryCallback(CallbackData, prefix='category'):
 
 
 class BackToCatalogueCallback(CallbackData, prefix='go_back_to_catalogue'):
-    blank_: None
+    blank_: str
 
 
 class AddToCartCallback(CallbackData, prefix='add_to_cart'):

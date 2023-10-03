@@ -40,6 +40,8 @@ async def menu_keyboard_handler(message: Message):
         await handle_choose_product(message)
     elif message.text == strings.ru['payment_name']:
         await handle_payment(message)
+    else:
+        await message.answer(strings.ru['use_menu_keyboard'], reply_markup=kb.menu_keyboard, parse_mode='html')
 
 
 async def handle_cart(message: Message):
