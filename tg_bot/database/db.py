@@ -9,15 +9,14 @@ from enum import Enum
 import traceback
 
 # Project
-import config as cf
-from logger import Logger
-from database.models import User, Product, Order, base
+from admin_panel import config as cf
+from tg_bot.logger import Logger
+from tg_bot.database.models import User, Product, Order, base
 
 
 # Enum for different types of database connections
 class Type(Enum):
-    LOCAL = f'sqlite:///{cf.database["path"]}'
-    REMOTE = f'postgresql://{cf.database["user"]}:{cf.database["password"]}@{cf.database["host"]}:{cf.database["port"]}'
+    POSTGRESQL = f'postgresql://{cf.database["user"]}:{cf.database["password"]}@{cf.database["host"]}:{cf.database["port"]}'
 
 
 # Class for managing database connections and operations

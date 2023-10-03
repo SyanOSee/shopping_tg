@@ -9,8 +9,8 @@ import tg_bot.strings as strings
 from tg_bot.handlers.commands import handle_choose_product
 from tg_bot.modules import bot, database
 from tg_bot.middleware import *
-import config as cf
-from database.models import Order
+from tg_bot.database.models import Order
+import tg_bot.config as cf
 
 callback_router = Router()
 callback_router.callback_query.middleware(LoggingMiddleware())

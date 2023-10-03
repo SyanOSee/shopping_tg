@@ -3,7 +3,7 @@ from aiogram.utils.keyboard import *
 
 # Project
 import tg_bot.strings as strings
-from database.models import Product
+from tg_bot.database.models import Product
 from tg_bot.callbacks import *
 
 menu_buttons = [

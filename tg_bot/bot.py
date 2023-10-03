@@ -5,8 +5,8 @@ from aiogram import Bot, Dispatcher
 import asyncio
 
 # Project
-import config as cf
-from logger import Logger
+import tg_bot.config as cf
+from tg_bot.logger import Logger
 
 
 class TelegramBot:

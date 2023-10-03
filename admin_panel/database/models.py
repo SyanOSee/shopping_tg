@@ -7,7 +7,6 @@ from sqlalchemy.types import PickleType
 from datetime import datetime
 
 # Project
-import config as cf
 
 # Creating a base class for declarative models
 base = declarative_base()
