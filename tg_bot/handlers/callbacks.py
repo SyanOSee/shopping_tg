@@ -3,12 +3,12 @@ from aiogram import Router, F
 from aiogram.types import *
 
 # Project
-from callback_obj import *
+from handlers.callback_data import *
 import keyboards as kb
-import strings as strings
+import format as fmt
 from handlers.commands import handle_choose_product
 from modules import bot, database
-from middleware import *
+from handlers.middleware import *
 from database.models import Order
 import config as cf
 
@@ -29,7 +29,7 @@ async def handle_category_callback(callback: CallbackQuery, callback_data: Categ
 
     for product in await database.product.get_by_category(callback_data.category):
         # Retrieve message and reply markup for the product card
-        msg, should_use_add_to_cart_keyboard = await strings.ru['get_product_card_info_msg'](
+        msg, should_use_add_to_cart_keyboard = await fmt.ru_strs['get_product_card_info_msg'](
             user_id=callback.from_user.id,
             product=product,
             database=database
@@ -50,7 +50,7 @@ async def handle_category_callback(callback: CallbackQuery, callback_data: Categ
     # Send a message with an option to go back to the catalog
     await bot.bot.send_message(
         chat_id=callback.message.chat.id,
-        text=strings.ru['back_to_catalogue_msg'],
+        text=fmt.ru_strs['back_to_catalogue_msg'],
         reply_markup=await kb.get_back_to_categories_keyboard(),
         parse_mode='html'
     )
@@ -94,7 +94,7 @@ async def handle_add_to_cart_callback(callback: CallbackQuery, callback_data: Ad
 
     # Update product cards information
     await bot.bot.answer_callback_query(callback.id)
-    msg, should_use_add_to_cart_keyboard = await strings.ru['get_product_card_info_msg'](
+    msg, should_use_add_to_cart_keyboard = await fmt.ru_strs['get_product_card_info_msg'](
         user_id=user.user_id,
         product=product,
         database=database
@@ -131,7 +131,7 @@ async def handle_remove_from_cart_callback(callback: CallbackQuery, callback_dat
     if in_cart:
         await callback.message.delete()
     else:
-        msg, should_use_add_to_cart_keyboard = await strings.ru['get_product_card_info_msg'](
+        msg, should_use_add_to_cart_keyboard = await fmt.ru_strs['get_product_card_info_msg'](
             user_id=user.user_id,
             product=product,
             database=database
@@ -172,7 +172,7 @@ async def handle_change_amount_callback(callback: CallbackQuery, callback_data: 
     await database.user.update(user)
 
     await bot.bot.answer_callback_query(callback.id)
-    msg = await strings.ru['update_cart_msg'](callback.message.text, cart_amount, total_cost, product)
+    msg = await fmt.ru_strs['update_cart_msg'](callback.message.text, cart_amount, total_cost, product)
     await callback.message.edit_text(msg, reply_markup=await kb.get_cart_options_keyboard(
         product_id=product.product_id,
         category=product.category,
@@ -208,7 +208,7 @@ async def handle_payment_callback(callback: CallbackQuery, callback_data: Paymen
             )
 
     # Send the invoice to the user
-    title, description = strings.ru['invoice_msg']
+    title, description = fmt.ru_strs['invoice_msg']
     if prices:
         await bot.bot.send_invoice(
             chat_id=callback.message.chat.id,
@@ -222,7 +222,7 @@ async def handle_payment_callback(callback: CallbackQuery, callback_data: Paymen
             protect_content=True,
         )
     else:
-        await callback.message.answer(strings.ru['nothing_to_pay'], parse_mode='html')
+        await callback.message.answer(fmt.ru_strs['nothing_to_pay'], parse_mode='html')
 
 
 @callback_router.pre_checkout_query()
@@ -277,7 +277,7 @@ async def successful_payment(message: Message):
     await database.user.update(user)
 
     # Send the success message
-    await bot.bot.send_message(message.chat.id, strings.ru['successful_payment_msg'](
+    await bot.bot.send_message(message.chat.id, fmt.ru_strs['successful_payment_msg'](
         total_price=message.successful_payment.total_amount // 100,
         currency=message.successful_payment.currency
     ), parse_mode='html')

@@ -2,7 +2,7 @@ import logging as log
 
 
 class Logger:
-    def __init__(self, logging_path: str = ""):
+    def __init__(self, logging_path: str = "./log.log"):
         self.__logging_path = logging_path
         log.basicConfig(  # formatting output string
             format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',

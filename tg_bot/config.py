@@ -27,11 +27,8 @@ database = {
     'port': os.getenv('DATABASE_PORT'),
     'user': os.getenv('DATABASE_USER'),
     'password': os.getenv('DATABASE_PASSWORD'),
-    'path': BASE + os.getenv('DATABASE_PATH')  # For database testing locally
 }
 
 server = {
-    'host': os.getenv('SERVER_HOST'),
-    'port': os.getenv('SERVER_PORT'),
-    'secret_key': os.getenv('SERVER_SECRET_KEY')
+    'url': os.getenv('SERVER_URL')
 }

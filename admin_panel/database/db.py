@@ -16,7 +16,7 @@ from database.models import base
 
 # Enum for different types of database connections
 class Type(Enum):
-    POSTGRESQL = f'postgresql://{cf.database["user"]}:{cf.database["password"]}@{cf.database["host"]}:{cf.database["port"]}'
+    POSTGRESQL = f'postgresql+psycopg2://{cf.database["user"]}:{cf.database["password"]}@{cf.database["host"]}:{cf.database["port"]}'
 
 
 # Class for managing database connections and operations
