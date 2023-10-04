@@ -1,6 +1,6 @@
 # Project
-from tg_bot.database.db import Database
-from tg_bot.database.models import Product
+from database.db import Database
+from database.models import Product
 
 
 async def get_product_card_info_msg(user_id: int, product: Product, database: Database) -> (str, bool):

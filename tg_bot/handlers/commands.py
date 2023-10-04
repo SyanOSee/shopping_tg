@@ -4,11 +4,11 @@ from aiogram.types import Message
 from aiogram.filters import Command
 
 # Project
-import tg_bot.keyboards as kb
-import tg_bot.strings as strings
-from tg_bot.modules import database
-from tg_bot.middleware import *
-from tg_bot.database.models import User
+import keyboards as kb
+import strings as strings
+from modules import database
+from middleware import *
+from database.models import User
 
 commands_router = Router()
 commands_router.message.middleware(LoggingMiddleware())

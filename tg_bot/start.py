@@ -2,9 +2,9 @@
 import asyncio
 
 # Project
-from tg_bot.handlers.callbacks import callback_router
-from tg_bot.handlers.commands import commands_router
-from tg_bot.modules import bot
+from handlers.callbacks import callback_router
+from handlers.commands import commands_router
+from modules import bot
 
 
 async def start_up_bot():

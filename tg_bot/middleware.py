@@ -8,7 +8,7 @@ from aiogram.types import TelegramObject
 from typing import Callable, Dict, Any, Awaitable
 
 # Project
-from tg_bot.modules import logger
+from modules import logger
 
 
 def clear_dict(dict_: dict) -> dict:

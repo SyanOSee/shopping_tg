@@ -9,9 +9,9 @@ from enum import Enum
 import traceback
 
 # Project
-from admin_panel import config as cf
-from admin_panel.logger import Logger
-from admin_panel.database.models import base
+import config as cf
+from logger import Logger
+from database.models import base
 
 
 # Enum for different types of database connections

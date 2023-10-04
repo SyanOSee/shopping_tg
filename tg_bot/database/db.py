@@ -9,9 +9,9 @@ from enum import Enum
 import traceback
 
 # Project
-from admin_panel import config as cf
-from tg_bot.logger import Logger
-from tg_bot.database.models import User, Product, Order, base
+import config as cf
+from logger import Logger
+from database.models import User, Product, Order, base
 
 
 # Enum for different types of database connections

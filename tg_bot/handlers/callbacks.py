@@ -3,14 +3,14 @@ from aiogram import Router, F
 from aiogram.types import *
 
 # Project
-from tg_bot.callbacks import *
-import tg_bot.keyboards as kb
-import tg_bot.strings as strings
-from tg_bot.handlers.commands import handle_choose_product
-from tg_bot.modules import bot, database
-from tg_bot.middleware import *
-from tg_bot.database.models import Order
-import tg_bot.config as cf
+from callback_obj import *
+import keyboards as kb
+import strings as strings
+from handlers.commands import handle_choose_product
+from modules import bot, database
+from middleware import *
+from database.models import Order
+import config as cf
 
 callback_router = Router()
 callback_router.callback_query.middleware(LoggingMiddleware())

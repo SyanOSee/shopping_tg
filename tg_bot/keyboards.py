@@ -2,9 +2,9 @@
 from aiogram.utils.keyboard import *
 
 # Project
-import tg_bot.strings as strings
-from tg_bot.database.models import Product
-from tg_bot.callbacks import *
+import strings as strings
+from database.models import Product
+from callback_obj import *
 
 menu_buttons = [
     [KeyboardButton(text=strings.ru['about_name']), KeyboardButton(text=strings.ru['faq_name'])],
