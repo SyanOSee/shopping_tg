@@ -33,7 +33,7 @@ async def admin(message: Message, state: FSMContext):
     Handler for the '/admin' command.
     Asks user to enter name of database
     """
-    await message.answer(fmt.ru_strs['admin_name'], parse_mode='html')
+    await message.answer(fmt.ru_strs['admin_enter_username'], parse_mode='html')
     await state.set_state(AdminStates.get_user_name)
 
 
