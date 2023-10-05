@@ -121,6 +121,10 @@ celerybeat.pid
 
 # Environments
 .env
+<<<<<<< HEAD
+=======
+/.env
+>>>>>>> develop
 .venv
 env/
 venv/
@@ -152,6 +156,15 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+<<<<<<< HEAD
+=======
+.idea
+data_products.txt
+.data_products.txt
+.volume
+volume
+
+>>>>>>> develop
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
