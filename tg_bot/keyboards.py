@@ -70,7 +70,7 @@ async def get_cart_options_keyboard(product_id: int, category: str,
 async def get_payment_keyboard() -> InlineKeyboardMarkup:
     """Generates an inline keyboard markup with payment provider buttons"""
     builder = InlineKeyboardBuilder()
-    for provider in ['UKassa']:
+    for provider in ['UKassa', 'Paymaster']:
         builder.button(
             text=provider,
             callback_data=PaymentCallback(provider=provider)

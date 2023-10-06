@@ -19,7 +19,8 @@ bot = {
 }
 
 payment = {
-    'ukassa': os.getenv('UKASSA')
+    'ukassa': os.getenv('UKASSA'),
+    'paymaster': os.getenv('PAY_MASTER')
 }
 
 database = {

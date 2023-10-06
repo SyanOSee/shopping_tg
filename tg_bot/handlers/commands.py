@@ -56,7 +56,7 @@ async def admin_password_state(message: Message, state: FSMContext):
     """
     user_name, password = (await state.get_data())['admin_name'], message.text
     if user_name == cf.database['user'] and password == cf.database['password']:
-        await message.answer(fmt.ru_strs['admin_url'] + cf.server['url'], parse_mode='html')
+        await message.answer(fmt.ru_strs['admin_url'] + f'<b>{cf.server["url"]}</b>', parse_mode='html')
     else:
         await message.answer(fmt.ru_strs['admin_wrong'], parse_mode='html')
     await state.clear()

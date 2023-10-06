@@ -194,6 +194,8 @@ async def handle_payment_callback(callback: CallbackQuery, callback_data: Paymen
     match provider:
         case 'UKassa':
             provider_token = cf.payment['ukassa']
+        case 'Paymaster':
+            provider_token = cf.payment['paymaster']
         case _:
             provider_token = ''
 
@@ -234,7 +236,7 @@ async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
     await bot.bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
 
 
-@callback_router.message(F.SUCCESSFUL_PAYMENT)
+@callback_router.message(F.successful_payment)
 async def successful_payment(message: Message):
     """
     Handler for successful payment.
@@ -245,7 +247,7 @@ async def successful_payment(message: Message):
     logger.info('Payment is successful')
 
     # Extract payment information from the message
-    payment_info = message.successful_payment.to_python()
+    payment_info = message.successful_payment.model_dump()
 
     # Fetch order address
     address = ''

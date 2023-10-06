@@ -21,4 +21,4 @@ class TelegramBot:
 
     async def start(self):
         self.logger.clear_log_file()
-        await self.dispatcher.start_polling(self.bot)
+        await self.dispatcher.start_polling(self.bot, skip_updates=True)
